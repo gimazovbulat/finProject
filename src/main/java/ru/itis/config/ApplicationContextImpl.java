@@ -8,6 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.sql.DataSource;
@@ -27,6 +30,10 @@ public class ApplicationContextImpl {
     private final static String MAIL_PASSWORD = "mail.password";
     private final static String MAIL_DEBUG = "mail.debug";
 
+    private final static String PROP_DIALECT = "db.hibernate.dialect";
+    private final static String PROP_HIBERNATE_SHOW_SQL = "db.hibernate.show_sql";
+    private final static String PROP_HIBERNATE_ENTITYMANAGER_PACKAGES_TO_SCAN = "db.entitymanager.packages.to.scan";
+    private final static String PROP_HIBERNATE_HBM2DDL_AUTO = "db.hibernate.hbm2ddl.auto";
     final
     Environment environment;
 
@@ -47,6 +54,19 @@ public class ApplicationContextImpl {
         driverManagerDataSource.setPassword(environment.getRequiredProperty(DB_PASSWORD));
         driverManagerDataSource.setUrl(environment.getRequiredProperty(DB_URL));
         return driverManagerDataSource;
+    }
+
+    @Bean(name = "entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean() {
+        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new
+                LocalContainerEntityManagerFactoryBean();
+        localContainerEntityManagerFactoryBean.setDataSource(datasource());
+        localContainerEntityManagerFactoryBean.setPackagesToScan("firstTry");
+
+        JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        localContainerEntityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
+        localContainerEntityManagerFactoryBean.setJpaProperties(additionalProperties());
+        return localContainerEntityManagerFactoryBean;
     }
 
     @Bean
@@ -81,10 +101,21 @@ public class ApplicationContextImpl {
 
         return mailSender;
     }
+
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
         multipartResolver.setMaxUploadSize(100000);
         return multipartResolver;
+    }
+
+    @Bean
+    Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.put(PROP_DIALECT, environment.getRequiredProperty(PROP_DIALECT));
+        properties.put(PROP_HIBERNATE_ENTITYMANAGER_PACKAGES_TO_SCAN, environment.getRequiredProperty(PROP_HIBERNATE_ENTITYMANAGER_PACKAGES_TO_SCAN));
+        properties.put(PROP_HIBERNATE_SHOW_SQL, environment.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
+        properties.put(PROP_HIBERNATE_HBM2DDL_AUTO, environment.getRequiredProperty(PROP_HIBERNATE_HBM2DDL_AUTO));
+        return properties;
     }
 }

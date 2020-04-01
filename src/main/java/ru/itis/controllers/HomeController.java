@@ -9,6 +9,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String getPage(Model model){
+
         return "home";
     }
 }

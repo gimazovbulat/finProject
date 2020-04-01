@@ -42,27 +42,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/signIn", "/signUp", "/confirm/*", "/");
-    }
-
-    @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/signIn", "/signUp", "/confirm/*", "/")
+                .permitAll()
                 .antMatchers("/admin")
                 .hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/signIn")
-                .usernameParameter("email")
-                .and()
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class);
-
     }
 
     @Override

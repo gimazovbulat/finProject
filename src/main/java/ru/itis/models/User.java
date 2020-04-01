@@ -6,6 +6,7 @@ import lombok.Data;
 import ru.itis.security.Role;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,6 +20,7 @@ public class User {
     private String confirmLink;
     private String avaPath;
     private Set<Role> roles;
+    private List<Booking> bookings;
 
     public User() {
         roles = new HashSet<>();

@@ -29,7 +29,7 @@ public class TokenFilter extends GenericFilterBean {
                 Authentication authentication = new JwtAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            filterChain.doFilter(servletRequest, servletResponse);
         }
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 }

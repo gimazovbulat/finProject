@@ -24,9 +24,10 @@ public class JwtUtils {
     private String encodedSecret;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         encodedSecret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
+
     public String createToken(User user) {
 
         Claims claims = Jwts.claims().setSubject(user.getEmail());
@@ -60,9 +61,11 @@ public class JwtUtils {
     public String resolveToken(HttpServletRequest req) {
         String reqToken = req.getHeader("Authorization");
         String cookieToken = null;
-        for (Cookie cookie : req.getCookies()) {
-            if (cookie.getName().equals("Authorization")){
-                cookieToken = cookie.getValue();
+        if (req.getCookies() != null) {
+            for (Cookie cookie : req.getCookies()) {
+                if (cookie.getName().equals("Authorization")) {
+                    cookieToken = cookie.getValue();
+                }
             }
         }
         if (reqToken != null && reqToken.startsWith("Bearer_")) {
