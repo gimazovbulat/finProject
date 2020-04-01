@@ -1,8 +1,7 @@
 package ru.itis.controllers;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +16,11 @@ import ru.itis.services.interfaces.SignInService;
 @RestController
 public class SignInController {
     private final SignInService signInService;
+    private final AuthenticationManager authenticationManager;
 
-    public SignInController(SignInService signInService) {
+    public SignInController(SignInService signInService, AuthenticationManager authenticationManager) {
         this.signInService = signInService;
+        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping("/signIn")
@@ -45,9 +46,9 @@ public class SignInController {
     @PostMapping("/signIn")
     public ResponseEntity<TokenDto> signIn(@RequestBody SignInForm signInData) {
         TokenDto tokenDto = signInService.signIn(signInData);
-        Authentication authentication = new JwtAuthentication(tokenDto.getToken());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        authenticationManager.authenticate(new JwtAuthentication(tokenDto.getToken()));
+       /* Authentication authentication = new JwtAuthentication(tokenDto.getToken());
+        SecurityContextHolder.getContext().setAuthentication(authentication);*/
         return ResponseEntity.ok(tokenDto);
     }
-
 }
