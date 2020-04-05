@@ -5,11 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dao.rowmappers.UsersRowMapper;
 import ru.itis.models.User;
-import ru.itis.security.Role;
+import ru.itis.models.Role;
 
 import java.sql.PreparedStatement;
 import java.util.Optional;
@@ -28,8 +27,8 @@ public class UsersRepositoryImpl implements UsersRepository {
     @Override
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT ut.id, ut.email, ut.password," +
-                " ut.state, ut.ava_path, ur.role, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
-                "ON ut.id = ur.user_id WHERE email = ?";
+                " ut.state, ut.ava_path, role.id as roleId, role.name as roleName, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
+                "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE email = ?";
         User user;
         try {
             user = jdbcTemplate.queryForObject(sql, usersRowmapper, email);
@@ -43,8 +42,8 @@ public class UsersRepositoryImpl implements UsersRepository {
     public Optional<User> findByConfirmLink(String confirmLink) {
         User user;
         String sql = "SELECT ut.id, ut.email, ut.password," +
-                " ut.state, ut.ava_path, ur.role, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
-                "ON ut.id = ur.user_id WHERE confirm_link = ?";
+                " ut.state, ut.ava_path, role.id as roleId, role.name as roleName, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
+                "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE confirm_link = ?";
         try {
             user = jdbcTemplate.queryForObject(sql, usersRowmapper, confirmLink);
         } catch (DataException e) {
@@ -53,7 +52,6 @@ public class UsersRepositoryImpl implements UsersRepository {
         return Optional.of(user);
     }
 
-    @Transactional
     @Override
     public Long save(User user) {
         String saveSql = "INSERT INTO finproj.users_table (email, password, state, confirm_link, ava_path) VALUES (?, ?, ?, ?, ?);";
@@ -72,12 +70,12 @@ public class UsersRepositoryImpl implements UsersRepository {
 
         user.setId((Long) keyHolder.getKey());
 
-        String rolesSql = "INSERT INTO finproj.user_roles (user_id, role) VALUES (?, ?)";
+        String rolesSql = "INSERT INTO finproj.user_roles (user_id, role_id) VALUES (?, ?)";
         for (Role role : user.getRoles()) {
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(rolesSql);
                 ps.setLong(1, user.getId());
-                ps.setString(2, role.getVal());
+                ps.setInt(2, role.getId());
                 return ps;
             });
         }
@@ -88,8 +86,8 @@ public class UsersRepositoryImpl implements UsersRepository {
     public Optional<User> find(Long id) {
         User user;
         String sql = "SELECT ut.id, ut.email, ut.password," +
-                " ut.state, ut.ava_path, ur.role, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
-                "ON ut.id = ur.user_id WHERE id = ?";
+                " ut.state, ut.ava_path, role.id as roleId, role.name as roleName, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
+                "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE id = ?";
         try {
             user = jdbcTemplate.queryForObject(sql, usersRowmapper, id);
         } catch (DataException e) {
@@ -99,7 +97,7 @@ public class UsersRepositoryImpl implements UsersRepository {
     }
 
     @Override
-    public void update(User user) {
+    public void update(User user) { //todo roles
         String updateSql = "UPDATE finproj.users_table SET email = ?, password = ?, state = ?, confirm_link = ?, ava_path = ? WHERE id = ?";
 
         jdbcTemplate.update(updateSql,

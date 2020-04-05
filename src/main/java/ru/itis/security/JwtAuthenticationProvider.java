@@ -5,11 +5,13 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ru.itis.models.User;
+import ru.itis.models.UserState;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -36,13 +38,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         }
 
         List<String> roles = claims.get("roles", ArrayList.class);
+        String email = claims.getSubject();
+        UserState userState = UserState.valueOf(claims.get("state", String.class));
+        Long id = claims.get("id", Long.class);
 
-        User user = User.builder()
-                .email(claims.getSubject())
-                .roles(roles.stream().map(Role::valueOf).collect(Collectors.toSet()))
-                .build();
+        UserDetails userDetails = new UserDetailsImpl(id, email, userState, roles);
 
-        UserDetails userDetails = new UserDetailsImpl(user);
         authentication.setAuthenticated(true);
         ((JwtAuthentication)authentication).setUserDetails(userDetails);
         return authentication;

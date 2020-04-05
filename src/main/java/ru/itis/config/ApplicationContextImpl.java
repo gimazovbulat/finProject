@@ -8,11 +8,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -20,6 +24,7 @@ import java.util.Properties;
 @ComponentScan(basePackages = "ru.itis")
 @EnableAspectJAutoProxy
 @PropertySource("classpath:/application.properties")
+@EnableTransactionManagement
 public class ApplicationContextImpl {
     private final static String DB_USERNAME = "db.username";
     private final static String DB_PASSWORD = "db.password";
@@ -61,12 +66,18 @@ public class ApplicationContextImpl {
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new
                 LocalContainerEntityManagerFactoryBean();
         localContainerEntityManagerFactoryBean.setDataSource(datasource());
-        localContainerEntityManagerFactoryBean.setPackagesToScan("firstTry");
+        localContainerEntityManagerFactoryBean.setPackagesToScan(environment.getProperty(PROP_HIBERNATE_ENTITYMANAGER_PACKAGES_TO_SCAN));
 
         JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
         localContainerEntityManagerFactoryBean.setJpaProperties(additionalProperties());
         return localContainerEntityManagerFactoryBean;
+    }
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager platformTransactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
+        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
+        return jpaTransactionManager;
     }
 
     @Bean

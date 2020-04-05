@@ -1,5 +1,6 @@
 package ru.itis.dao.impl;
 
+import org.hibernate.exception.DataException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,15 +17,13 @@ public class FilesRepositoryImpl implements FilesRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private RowMapper<FileInfo> rowMapper = (row, num) ->
-        FileInfo.builder()
-                .url(row.getString("url"))
-                .type(row.getString("type"))
-                .size(row.getLong("size"))
-                .storageFileName(row.getString("storage_name"))
-                .originalFileName(row.getString("orig_name"))
-                .id(row.getLong("id"))
-                .userId(row.getLong("user_id"))
-                .build();
+            FileInfo.builder()
+                    .url(row.getString("url"))
+                    .type(row.getString("type"))
+                    .storageFileName(row.getString("storage_name"))
+                    .originalFileName(row.getString("original_name"))
+                    .id(row.getLong("id"))
+                    .build();
 
 
     public FilesRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -35,15 +34,13 @@ public class FilesRepositoryImpl implements FilesRepository {
     public Long save(FileInfo fileInfo) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        String sqlToSave = "INSERT INTO project.files (orig_name, storage_name, type, size, url, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlToSave = "INSERT INTO finproj.files (original_name, storage_name, type, url) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlToSave, new String[]{"id"});
             ps.setString(1, fileInfo.getOriginalFileName());
             ps.setString(2, fileInfo.getStorageFileName());
             ps.setString(3, fileInfo.getType());
-            ps.setLong(4, fileInfo.getSize());
-            ps.setString(5, fileInfo.getUrl());
-            ps.setLong(6, fileInfo.getUserId());
+            ps.setString(4, fileInfo.getUrl());
 
             return ps;
         }, keyHolder);
@@ -52,8 +49,15 @@ public class FilesRepositoryImpl implements FilesRepository {
     }
 
     @Override
-    public Optional<FileInfo> find(Long aLong) {
-        return Optional.empty();
+    public Optional<FileInfo> find(Long id) {
+        String sql = "select * from finproj.files where id = ?";
+        FileInfo fileInfo;
+        try {
+            fileInfo = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (DataException e) {
+            throw new IllegalStateException(e);
+        }
+        return Optional.of(fileInfo);
     }
 
     @Override
@@ -68,7 +72,7 @@ public class FilesRepositoryImpl implements FilesRepository {
 
     @Override
     public FileInfo findByName(String storageName) {
-        String sqlToFind = "SELECT * FROM project.files WHERE storage_name = ?";
+        String sqlToFind = "SELECT * FROM finproj.files WHERE storage_name = ?";
         FileInfo fileInfo = jdbcTemplate.queryForObject(sqlToFind, rowMapper, storageName);
         return fileInfo;
     }

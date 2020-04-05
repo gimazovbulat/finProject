@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.itis.models.User;
 import ru.itis.models.UserState;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -18,22 +18,25 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 public class UserDetailsImpl implements UserDetails {
-    private User user;
+    private Long id;
+    private String email;
+    private UserState userState;
+    private List<String> roleNames;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getVal())).collect(Collectors.toList());
+        return roleNames.stream()
+                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return email;
     }
 
     @Override
@@ -53,6 +56,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getUserState() == UserState.CONFIRMED;
+        return userState == UserState.CONFIRMED;
     }
 }

@@ -3,6 +3,7 @@ package ru.itis.security;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.itis.models.Role;
 import ru.itis.models.User;
 
 import javax.annotation.PostConstruct;
@@ -31,7 +32,9 @@ public class JwtUtils {
     public String createToken(User user) {
 
         Claims claims = Jwts.claims().setSubject(user.getEmail());
-        claims.put("roles", user.getRoles().stream().map(Role::getVal).collect(Collectors.toList()));
+        claims.put("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        claims.put("id", user.getId());
+        claims.put("state", user.getUserState().getValue());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -45,7 +48,7 @@ public class JwtUtils {
     }
 
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, HttpServletRequest request) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(encodedSecret).parseClaimsJws(token);
 
@@ -54,16 +57,23 @@ public class JwtUtils {
             }
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("JWT token is expired or invalid");
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("Authentication")) {
+                    cookie.setMaxAge(0);
+                    cookie.setValue("");
+                }
+            }
+            return false;
         }
     }
 
     public String resolveToken(HttpServletRequest req) {
-        String reqToken = req.getHeader("Authorization");
+        String reqToken = req.getHeader("Authentication");
         String cookieToken = null;
         if (req.getCookies() != null) {
             for (Cookie cookie : req.getCookies()) {
-                if (cookie.getName().equals("Authorization")) {
+                if (cookie.getName().equals("Authentication")) {
                     cookieToken = cookie.getValue();
                 }
             }

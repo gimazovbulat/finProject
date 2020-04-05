@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.itis.models.User;
 import ru.itis.models.UserState;
-import ru.itis.security.Role;
+import ru.itis.models.Role;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +22,8 @@ public class UsersRowMapper implements RowMapper<User> {
             String password = rs.getString("password");
             String confirmLink = rs.getString("confirm_link");
             String avaPath = rs.getString("ava_path");
-            String role = rs.getString("role");
+            Integer roleId = rs.getInt("roleId");
+            String rolName = rs.getString("roleName");
 
             user.setId(id);
             user.setEmail(email);
@@ -30,7 +31,7 @@ public class UsersRowMapper implements RowMapper<User> {
             user.setAvaPath(avaPath);
             user.setConfirmLink(confirmLink);
             user.setUserState(userState);
-            user.getRoles().add(Role.valueOf(role));
+            user.getRoles().add(new Role(roleId, rolName));
         }
         while (rs.next());
         return user;

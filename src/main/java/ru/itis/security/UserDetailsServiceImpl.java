@@ -5,6 +5,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.itis.dao.interfaces.UsersRepository;
+import ru.itis.models.Role;
+import ru.itis.models.User;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service("userDetailsServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -16,7 +21,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return new UserDetailsImpl(usersRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User with that name not found")));
+        Optional<User> optionalUser = usersRepository.findByEmail(email);
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            return new UserDetailsImpl(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getUserState(),
+                    user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        }
+        throw new UsernameNotFoundException("user not found");
     }
 }

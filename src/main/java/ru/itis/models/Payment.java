@@ -10,10 +10,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(schema = "finProj", name = "payment")
+@Table(schema = "finProj", name = "payments")
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
     private Integer cost;
 }

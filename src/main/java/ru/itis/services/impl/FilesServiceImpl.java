@@ -46,10 +46,8 @@ public class FilesServiceImpl implements FilesService {
         FileInfo fileInfo = FileInfo.builder()
                 .originalFileName(fileOrigName)
                 .storageFileName(storageName)
-                .size(file.getSize())
                 .type(file.getContentType())
                 .url("/files/" + storageName)
-                .userId(userId)
                 .build();
 
         filesRepository.save(fileInfo);

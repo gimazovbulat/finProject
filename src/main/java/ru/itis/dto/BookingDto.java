@@ -4,17 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.itis.models.Seat;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PlaceDto {
-    private int id;
-    private String address;
-    private FileInfoDto photo;
-    private List<SeatDto> seats;
-    private List<SeatDto> freeSeats;
+public class BookingDto {
+    private Long id;
+    private UserDto user;
+    private Date startTime;
+    private Date endTime;
+    private List<Seat> seats;
 }

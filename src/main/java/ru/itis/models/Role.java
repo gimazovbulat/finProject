@@ -1,0 +1,28 @@
+package ru.itis.models;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import ru.itis.models.User;
+
+import javax.persistence.*;
+import java.util.Set;
+
+@NoArgsConstructor
+@Entity
+@Data
+@Table(schema = "finproj", name = "roles")
+public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @ManyToMany(mappedBy = "roles")
+    @Transient
+    private Set<User> user;
+    private String name;
+
+    public Role(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+}
