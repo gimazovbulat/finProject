@@ -41,7 +41,7 @@ public class Booking {
                 .endTime(booking.getEndTime())
                 .seats(booking.getSeats())
                 .id(booking.getId())
-                .userId(booking.getUser().getId())
+                .userDto(User.toUserDto(booking.getUser()))
                 .build();
     }
 

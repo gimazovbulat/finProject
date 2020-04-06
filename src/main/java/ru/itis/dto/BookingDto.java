@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.itis.models.Seat;
+import ru.itis.models.User;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 @Builder
 public class BookingDto {
     private Long id;
-    private Long userId;
+    private UserDto userDto;
     private Date startTime;
     private Date endTime;
     private List<Seat> seats;
@@ -24,7 +25,7 @@ public class BookingDto {
     public String toString() {
         return "BookingDto{" +
                 "id=" + id +
-                ", user=" + userId +
+                ", user=" + userDto.getEmail() +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", seats=" + seats +

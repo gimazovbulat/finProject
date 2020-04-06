@@ -3,6 +3,7 @@ package ru.itis.services.impl;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itis.aspects.SendMailAnno;
 import ru.itis.dao.interfaces.BookingRepository;
 import ru.itis.dao.interfaces.SeatsRepository;
 import ru.itis.dto.BookingDto;
@@ -33,6 +34,7 @@ public class BookingServiceImpl implements BookingService {
         this.seatsRepository = seatsRepository;
     }
 
+    @SendMailAnno
     @SneakyThrows
     @Override
     public BookingDto bookSeats(BookingForm bookingForm) {
