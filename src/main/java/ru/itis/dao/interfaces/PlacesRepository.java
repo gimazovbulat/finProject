@@ -12,4 +12,5 @@ public interface PlacesRepository {
 
     Optional<Place> getById(Integer id);
 
+    Integer countPlaces();
 }

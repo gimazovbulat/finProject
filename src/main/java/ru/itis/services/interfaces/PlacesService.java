@@ -5,8 +5,10 @@ import ru.itis.dto.PlaceDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface PlaceService {
+public interface PlacesService {
     List<PlaceDto> getAll(int page, int size);
 
-    Optional<PlaceDto> getById(int id);
+    PlaceDto getById(int id);
+
+    Integer getCount();
 }

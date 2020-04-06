@@ -1,5 +1,6 @@
 package ru.itis.services.impl;
 
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dao.interfaces.BookingRepository;
@@ -11,6 +12,7 @@ import ru.itis.models.Seat;
 import ru.itis.models.SeatStatus;
 import ru.itis.services.interfaces.BookingService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +33,7 @@ public class BookingServiceImpl implements BookingService {
         this.seatsRepository = seatsRepository;
     }
 
-
+    @SneakyThrows
     @Override
     public BookingDto bookSeats(BookingForm bookingForm) {
         List<Seat> seats = new ArrayList<>();
@@ -43,10 +45,12 @@ public class BookingServiceImpl implements BookingService {
             });
         }
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
         Booking booking = builder()
-                .startTime(bookingForm.getStartTime())
-                .endTime(bookingForm.getEndTime())
                 .user(fromUserDto(bookingForm.getUserDto()))
+                .startTime(simpleDateFormat.parse(bookingForm.getStartTime()))
+                .endTime(simpleDateFormat.parse(bookingForm.getEndTime()))
                 .seats(seats)
                 .build();
 

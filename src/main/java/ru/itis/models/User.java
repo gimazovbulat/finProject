@@ -3,12 +3,13 @@ package ru.itis.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.itis.dto.UserDto;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,7 @@ public class User {
     private String email;
     private String password;
     @Column(name = "state")
+    @Enumerated(EnumType.STRING)
     private UserState userState;
     @Column(name = "confirm_link")
     private String confirmLink;
@@ -31,7 +33,7 @@ public class User {
     @JoinTable(schema = "finproj", name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Booking> bookings;
 
     public User() {
@@ -52,6 +54,21 @@ public class User {
                 .id(user.getId())
                 .avaPath(user.getAvaPath())
                 .email(user.getEmail())
+                .bookings(user.getBookings().stream().map(Booking::toBookingDto).collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId()) &&
+                Objects.equals(getEmail(), user.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getEmail());
     }
 }

@@ -5,23 +5,29 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.itis.dao.interfaces.BookingRepository;
 import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dao.rowmappers.UsersRowMapper;
+import ru.itis.models.Booking;
 import ru.itis.models.User;
 import ru.itis.models.Role;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class UsersRepositoryImpl implements UsersRepository {
     private final JdbcTemplate jdbcTemplate;
     private final UsersRowMapper usersRowmapper;
+    private final BookingRepository bookingRepository;
 
     public UsersRepositoryImpl(JdbcTemplate jdbcTemplate,
-                               UsersRowMapper usersRowmapper) {
+                               UsersRowMapper usersRowmapper,
+                               BookingRepository bookingRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.usersRowmapper = usersRowmapper;
+        this.bookingRepository = bookingRepository;
     }
 
     @Override
@@ -32,6 +38,9 @@ public class UsersRepositoryImpl implements UsersRepository {
         User user;
         try {
             user = jdbcTemplate.queryForObject(sql, usersRowmapper, email);
+            List<Booking> bookings = bookingRepository.getUsersBookings(user);
+            user.setBookings(bookings);
+            System.out.println(user);
         } catch (DataException e) {
             throw new IllegalStateException(e);
         }
@@ -90,6 +99,8 @@ public class UsersRepositoryImpl implements UsersRepository {
                 "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE id = ?";
         try {
             user = jdbcTemplate.queryForObject(sql, usersRowmapper, id);
+            List<Booking> bookings = bookingRepository.getUsersBookings(user);
+            user.setBookings(bookings);
         } catch (DataException e) {
             throw new IllegalStateException(e);
         }

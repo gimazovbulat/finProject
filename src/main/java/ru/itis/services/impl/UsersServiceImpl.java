@@ -17,31 +17,20 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public Optional<UserDto> findUser(Long id) {
+    public UserDto findUser(Long id) {
         Optional<User> optionalUser = usersRepository.find(id);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            return Optional.of(UserDto.builder()
-                    .id(user.getId())
-                    .email(user.getEmail())
-                    .avaPath(user.getAvaPath())
-                    .build());
+            return optionalUser.map(User::toUserDto).get();
         }
-        return Optional.empty();
+        throw new IllegalStateException();
     }
 
     @Override
-    public Optional<UserDto> findUser(String email) {
+    public UserDto findUser(String email) {
         Optional<User> optionalUser = usersRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            return Optional.of(UserDto.builder()
-                    .email(email)
-                    .avaPath(user.getAvaPath())
-                    .id(user.getId())
-                    .build());
+            return optionalUser.map(User::toUserDto).get();
         }
-        return Optional.empty();
-
+        throw new IllegalStateException();
     }
 }

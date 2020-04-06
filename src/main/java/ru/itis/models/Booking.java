@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.itis.dto.BookingDto;
 
 import javax.persistence.*;
@@ -30,19 +32,8 @@ public class Booking {
     @JoinTable(schema = "finproj", name = "booking_seats",
             joinColumns = @JoinColumn(name = "booking_id"),
             inverseJoinColumns = @JoinColumn(name = "seat_id"))
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Seat> seats;
-
-
-    public static Booking fromBookingDto(BookingDto bookingDto) {
-        return Booking.builder()
-                .seats(bookingDto.getSeats())
-                .user(User.fromUserDto(bookingDto.getUser()))
-                .endTime(bookingDto.getEndTime())
-                .startTime(bookingDto.getStartTime())
-                .id(bookingDto.getId())
-                .build();
-    }
 
     public static BookingDto toBookingDto(Booking booking) {
         return BookingDto.builder()
@@ -50,8 +41,18 @@ public class Booking {
                 .endTime(booking.getEndTime())
                 .seats(booking.getSeats())
                 .id(booking.getId())
-                .user(User.toUserDto(booking.getUser()))
+                .userId(booking.getUser().getId())
                 .build();
     }
 
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", seats=" + seats +
+                ", user=" + user.getEmail() +
+                '}';
+    }
 }

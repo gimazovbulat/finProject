@@ -12,6 +12,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -23,6 +24,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan(basePackages = "ru.itis")
 @EnableAspectJAutoProxy
+@EnableScheduling
 @PropertySource("classpath:/application.properties")
 @EnableTransactionManagement
 public class ApplicationContextImpl {

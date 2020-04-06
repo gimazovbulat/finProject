@@ -13,8 +13,8 @@ import java.util.Date;
 @Builder
 public class BookingForm {
     private Integer[] seatNumbers;
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String endTime;
     private Integer placeId;
     private UserDto userDto;
 }

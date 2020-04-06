@@ -15,8 +15,19 @@ import java.util.List;
 @Builder
 public class BookingDto {
     private Long id;
-    private UserDto user;
+    private Long userId;
     private Date startTime;
     private Date endTime;
     private List<Seat> seats;
+
+    @Override
+    public String toString() {
+        return "BookingDto{" +
+                "id=" + id +
+                ", user=" + userId +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", seats=" + seats +
+                '}';
+    }
 }

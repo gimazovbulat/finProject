@@ -2,12 +2,14 @@ package ru.itis.dao.rowmappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.itis.models.Booking;
 import ru.itis.models.User;
 import ru.itis.models.UserState;
 import ru.itis.models.Role;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Component
 public class UsersRowMapper implements RowMapper<User> {

@@ -12,23 +12,21 @@ import ru.itis.dto.PlaceDto;
 import ru.itis.dto.UserDto;
 import ru.itis.security.CurrentUser;
 import ru.itis.services.interfaces.BookingService;
-import ru.itis.services.interfaces.PlaceService;
+import ru.itis.services.interfaces.PlacesService;
 import ru.itis.services.interfaces.UsersService;
-
-import java.util.Optional;
 
 @Controller
 public class BookingController {
     private final UsersService usersService;
     private final BookingService bookingService;
-    private final PlaceService placeService;
+    private final PlacesService placesService;
 
     public BookingController(UsersService usersService,
                              BookingService bookingService,
-                             PlaceService placeService) {
+                             PlacesService placesService) {
         this.usersService = usersService;
         this.bookingService = bookingService;
-        this.placeService = placeService;
+        this.placesService = placesService;
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -38,19 +36,17 @@ public class BookingController {
                            @CurrentUser UserDetails userDetails,
                            Model model) {
         String email = userDetails.getUsername();
-        Optional<UserDto> optionalUser = usersService.findUser(email);
+        UserDto user = usersService.findUser(email);
 
-        if (optionalUser.isPresent()) {
-            UserDto user = optionalUser.get();
+        bookingForm.setUserDto(user);
+        bookingForm.setPlaceId(placeId);
 
-            bookingForm.setUserDto(user);
-            bookingForm.setPlaceId(placeId);
+        BookingDto bookingDto = bookingService.bookSeats(bookingForm);
+        model.addAttribute("booking", bookingDto);
 
-            BookingDto bookingDto = bookingService.bookSeats(bookingForm);
-            model.addAttribute("booking", bookingDto);
-            placeService.getById(placeId).ifPresent(dto -> model.addAttribute("place", dto));
-            return "place";
-        }
+        PlaceDto place = placesService.getById(placeId);
+
+        model.addAttribute("place", place);
         return "place";
     }
 }

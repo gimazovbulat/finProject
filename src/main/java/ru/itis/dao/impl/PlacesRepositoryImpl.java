@@ -45,4 +45,10 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                 .setParameter(1, id)
                 .getSingleResult());
     }
+
+    @Override
+    public Integer countPlaces() {
+        String sql = "SELECT COUNT(*) FROM finproj.places";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
 }

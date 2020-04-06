@@ -9,6 +9,7 @@ import ru.itis.models.Seat;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -47,6 +48,11 @@ public class SeatsRepositoryImpl implements SeatsRepository {
     @Override
     public void delete(Long id) {
 
+    }
+
+    @Override
+    public void deleteSeats(List<Seat> seats) {
+        seats.forEach(entityManager::remove);
     }
 
     @Override

@@ -6,7 +6,7 @@ import ru.itis.dao.interfaces.PlacesRepository;
 import ru.itis.dto.PlaceDto;
 import ru.itis.models.FileInfo;
 import ru.itis.models.Place;
-import ru.itis.services.interfaces.PlaceService;
+import ru.itis.services.interfaces.PlacesService;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class PlaceServiceImpl implements PlaceService {
+public class PlacesServiceImpl implements PlacesService {
     private final PlacesRepository placesRepository;
 
-    public PlaceServiceImpl(PlacesRepository placesRepository) {
+    public PlacesServiceImpl(PlacesRepository placesRepository) {
         this.placesRepository = placesRepository;
     }
 
@@ -35,8 +35,17 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public Optional<PlaceDto> getById(int id) {
+    public PlaceDto getById(int id) {
         Optional<Place> optionalPlace = placesRepository.getById(id);
-        return optionalPlace.map(Place::toPlaceDto);
+        if (optionalPlace.isPresent()) {
+            return optionalPlace.map(Place::toPlaceDto).get();
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    @Override
+    public Integer getCount() {
+        return placesRepository.countPlaces();
     }
 }
