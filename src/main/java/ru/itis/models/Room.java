@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.itis.dto.SeatDto;
+import ru.itis.dto.RoomDto;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,8 +14,8 @@ import java.util.List;
 @Data
 @Builder
 @Entity
-@Table(schema = "finproj", name = "seats")
-public class Seat {
+@Table(schema = "finproj", name = "rooms")
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,31 +26,31 @@ public class Seat {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private SeatStatus status;
-    @ManyToMany(mappedBy = "seats")
+    @ManyToMany(mappedBy = "rooms")
     private List<Booking> booking;
 
-    public Seat(Long id, Integer number, Place place, SeatStatus status) {
+    public Room(Long id, Integer number, Place place, SeatStatus status) {
         this.id = id;
         this.number = number;
         this.place = place;
         this.status = status;
     }
 
-    public static Seat fromSeatDto(SeatDto seatDto) {
-        return Seat.builder()
-                .id(seatDto.getId())
-                .number(seatDto.getNumber())
-                .place(seatDto.getPlace())
-                .status(seatDto.getStatus())
+    public static Room fromSeatDto(RoomDto roomDto) {
+        return Room.builder()
+                .id(roomDto.getId())
+                .number(roomDto.getNumber())
+                .place(roomDto.getPlace())
+                .status(roomDto.getStatus())
                 .build();
     }
 
-    public static SeatDto toSeatDto(Seat seat) {
-        return SeatDto.builder()
-                .number(seat.getNumber())
-                .status(seat.getStatus())
-                .place(seat.getPlace())
-                .id(seat.getId())
+    public static RoomDto toSeatDto(Room room) {
+        return RoomDto.builder()
+                .number(room.getNumber())
+                .status(room.getStatus())
+                .place(room.getPlace())
+                .id(room.getId())
                 .build();
     }
 

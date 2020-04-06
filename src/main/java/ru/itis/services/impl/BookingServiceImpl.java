@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.aspects.SendMailAnno;
 import ru.itis.dao.interfaces.BookingRepository;
-import ru.itis.dao.interfaces.SeatsRepository;
+import ru.itis.dao.interfaces.RoomsRepository;
 import ru.itis.dto.BookingDto;
 import ru.itis.dto.BookingForm;
 import ru.itis.models.Booking;
-import ru.itis.models.Seat;
+import ru.itis.models.Room;
 import ru.itis.models.SeatStatus;
 import ru.itis.services.interfaces.BookingService;
 
@@ -25,24 +25,24 @@ import static ru.itis.models.User.fromUserDto;
 @Service
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
-    private final SeatsRepository seatsRepository;
+    private final RoomsRepository roomsRepository;
 
     public BookingServiceImpl(BookingRepository bookingRepository,
-                              SeatsRepository seatsRepository) {
+                              RoomsRepository roomsRepository) {
         this.bookingRepository = bookingRepository;
-        this.seatsRepository = seatsRepository;
+        this.roomsRepository = roomsRepository;
     }
 
     @SendMailAnno
     @SneakyThrows
     @Override
-    public BookingDto bookSeats(BookingForm bookingForm) {
-        List<Seat> seats = new ArrayList<>();
-        for (Integer i : bookingForm.getSeatNumbers()) {
-            Optional<Seat> optionalSeat = seatsRepository.findByPlaceAndNumber(bookingForm.getPlaceId(), i);
-            optionalSeat.ifPresent(seat -> {
-                seat.setStatus(SeatStatus.BOOKED);
-                seats.add(seat);
+    public BookingDto bookRooms(BookingForm bookingForm) {
+        List<Room> rooms = new ArrayList<>();
+        for (Integer i : bookingForm.getRoomNumbers()) {
+            Optional<Room> optionalSeat = roomsRepository.findByPlaceAndNumber(bookingForm.getPlaceId(), i);
+            optionalSeat.ifPresent(room -> {
+                room.setStatus(SeatStatus.BOOKED);
+                rooms.add(room);
             });
         }
 
@@ -52,7 +52,7 @@ public class BookingServiceImpl implements BookingService {
                 .user(fromUserDto(bookingForm.getUserDto()))
                 .startTime(simpleDateFormat.parse(bookingForm.getStartTime()))
                 .endTime(simpleDateFormat.parse(bookingForm.getEndTime()))
-                .seats(seats)
+                .rooms(rooms)
                 .build();
 
         bookingRepository.book(booking);

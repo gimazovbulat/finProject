@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import ru.itis.dto.BookingDto;
 
 import javax.persistence.*;
@@ -30,17 +28,17 @@ public class Booking {
     private Date startTime;
     @Column(name = "end_time")
     private Date endTime;
-    @JoinTable(schema = "finproj", name = "booking_seats",
+    @JoinTable(schema = "finproj", name = "booking_rooms",
             joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "seat_id"))
+            inverseJoinColumns = @JoinColumn(name = "room_id"))
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Seat> seats;
+    private List<Room> rooms;
 
     public static BookingDto toBookingDto(Booking booking) {
         return BookingDto.builder()
                 .startTime(booking.getStartTime())
                 .endTime(booking.getEndTime())
-                .seats(booking.getSeats().stream().map(Seat::toSeatDto).collect(Collectors.toList()))
+                .rooms(booking.getRooms().stream().map(Room::toSeatDto).collect(Collectors.toList()))
                 .id(booking.getId())
                 .email(booking.getUser().getEmail())
                 .build();
@@ -52,7 +50,7 @@ public class Booking {
                 "id=" + id +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", seats=" + seats +
+                ", rooms=" + rooms +
                 ", user=" + user.getEmail() +
                 '}';
     }

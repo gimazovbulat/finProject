@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface BookingService {
-    BookingDto bookSeats(BookingForm booking);
+    BookingDto bookRooms(BookingForm booking);
 
     void bookPlace(int placeId, long userId);
 }

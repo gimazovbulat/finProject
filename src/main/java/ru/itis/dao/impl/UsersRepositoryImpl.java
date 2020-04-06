@@ -38,7 +38,7 @@ public class UsersRepositoryImpl implements UsersRepository {
         User user;
         try {
             user = jdbcTemplate.queryForObject(sql, usersRowmapper, email);
-            List<Booking> bookings = bookingRepository.getUsersBookings(user);
+            List<Booking> bookings = bookingRepository.getUsersBookings(user);//todo здесь надо или в сервисе
             user.setBookings(bookings);
         } catch (DataException e) {
             throw new IllegalStateException(e);

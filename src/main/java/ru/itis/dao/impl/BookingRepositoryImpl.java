@@ -2,8 +2,9 @@ package ru.itis.dao.impl;
 
 import org.springframework.stereotype.Repository;
 import ru.itis.dao.interfaces.BookingRepository;
-import ru.itis.dao.interfaces.SeatsRepository;
+import ru.itis.dao.interfaces.RoomsRepository;
 import ru.itis.models.Booking;
+import ru.itis.models.SeatStatus;
 import ru.itis.models.User;
 
 import javax.persistence.EntityManager;
@@ -15,29 +16,39 @@ import java.util.List;
 public class BookingRepositoryImpl implements BookingRepository {
     @PersistenceContext
     private EntityManager entityManager;
-    private final SeatsRepository seatsRepository;
+    private final RoomsRepository roomsRepository;
 
-    public BookingRepositoryImpl(SeatsRepository seatsRepository) {
-        this.seatsRepository = seatsRepository;
+    public BookingRepositoryImpl(RoomsRepository roomsRepository) {
+        this.roomsRepository = roomsRepository;
     }
 
     @Override
     public void book(Booking booking) {
         entityManager.persist(booking);
-        booking.getSeats().forEach(seatsRepository::save);
+        booking.getRooms().forEach(roomsRepository::save);
     }
 
     @Override
     public void removeBooking(Booking booking) {
         entityManager.remove(booking);
-        seatsRepository.deleteSeats(booking.getSeats());
+        roomsRepository.deleteSeats(booking.getRooms());
     }
 
     @Override
     public void removeOverdue(Date date) {
+        List<Booking> resultList = entityManager
+                .createQuery("select booking from Booking booking where booking.endTime < ?1")
+                .setParameter(1, date)
+                .getResultList();
+
+        resultList.forEach(booking -> booking.getRooms().forEach(room -> room.setStatus(SeatStatus.FREE)));
+        System.out.println(resultList);
+
         entityManager
                 .createQuery("DELETE from Booking where endTime < ?1")
-                .setParameter(1, date);
+                .setParameter(1, date)
+                .executeUpdate();
+
     }
 
     @Override

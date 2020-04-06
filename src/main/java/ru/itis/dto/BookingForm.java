@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class BookingForm {
-    private Integer[] seatNumbers;
+    private Integer[] roomNumbers;
     private String startTime;
     private String endTime;
     private Integer placeId;

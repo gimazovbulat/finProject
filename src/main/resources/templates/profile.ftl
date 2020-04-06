@@ -4,9 +4,9 @@
     <img src="${user.avaPath}">
 
 <#list user.bookings as booking>
-    <#list booking.seats as seat>
-        place address: ${seat.place.address}<br>
-        seat: ${seat.number}
+    <#list booking.rooms as room>
+        place address: ${room.place.address}<br>
+        room: ${room.number}
     </#list>
 
 </#list>

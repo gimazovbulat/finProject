@@ -11,7 +11,7 @@ import ru.itis.models.SeatStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SeatDto {
+public class RoomDto {
     private Long id;
     private int number;
     private Place place;

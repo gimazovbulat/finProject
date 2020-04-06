@@ -41,7 +41,7 @@ public class BookingController {
         bookingForm.setUserDto(user);
         bookingForm.setPlaceId(placeId);
 
-        BookingDto bookingDto = bookingService.bookSeats(bookingForm);
+        BookingDto bookingDto = bookingService.bookRooms(bookingForm);
         model.addAttribute("booking", bookingDto);
 
         PlaceDto place = placesService.getById(placeId);

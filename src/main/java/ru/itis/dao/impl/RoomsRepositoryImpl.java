@@ -3,9 +3,9 @@ package ru.itis.dao.impl;
 import org.hibernate.exception.DataException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.itis.dao.interfaces.SeatsRepository;
+import ru.itis.dao.interfaces.RoomsRepository;
 import ru.itis.dao.rowmappers.SeatRowMapper;
-import ru.itis.models.Seat;
+import ru.itis.models.Room;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,35 +13,35 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class SeatsRepositoryImpl implements SeatsRepository {
+public class RoomsRepositoryImpl implements RoomsRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SeatRowMapper seatRowMapper;
     @PersistenceContext
     EntityManager entityManager;
 
-    public SeatsRepositoryImpl(JdbcTemplate jdbcTemplate,
+    public RoomsRepositoryImpl(JdbcTemplate jdbcTemplate,
                                SeatRowMapper seatRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.seatRowMapper = seatRowMapper;
     }
 
     @Override
-    public Long save(Seat seat) {
-        if (seat.getId() <= 0) {
-            entityManager.persist(seat);
+    public Long save(Room room) {
+        if (room.getId() <= 0) {
+            entityManager.persist(room);
         } else {
-            entityManager.merge(seat);
+            entityManager.merge(room);
         }
-        return seat.getId();
+        return room.getId();
     }
 
     @Override
-    public Optional<Seat> find(Long id) {
+    public Optional<Room> find(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public void update(Seat seat) {
+    public void update(Room room) {
 
     }
 
@@ -51,16 +51,16 @@ public class SeatsRepositoryImpl implements SeatsRepository {
     }
 
     @Override
-    public void deleteSeats(List<Seat> seats) {
-        seats.forEach(entityManager::remove);
+    public void deleteSeats(List<Room> rooms) {
+        rooms.forEach(entityManager::remove);
     }
 
     @Override
-    public Optional<Seat> findByPlaceAndNumber(Integer placeId, Integer number) {
-        String sql = "SELECT * FROM finproj.seats WHERE place_id = ? AND number = ?";
+    public Optional<Room> findByPlaceAndNumber(Integer placeId, Integer number) {
+        String sql = "SELECT * FROM finproj.rooms WHERE place_id = ? AND number = ?";
         try {
-            Seat seat = jdbcTemplate.queryForObject(sql, seatRowMapper, placeId, number);
-            return Optional.of(seat);
+            Room room = jdbcTemplate.queryForObject(sql, seatRowMapper, placeId, number);
+            return Optional.of(room);
         } catch (DataException e) {
             throw new IllegalStateException(e);
         }

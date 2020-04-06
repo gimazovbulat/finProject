@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.itis.models.Seat;
-import ru.itis.models.User;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +17,7 @@ public class BookingDto {
     private String email;
     private Date startTime;
     private Date endTime;
-    private List<SeatDto> seats;
+    private List<RoomDto> rooms;
 
     @Override
     public String toString() {
@@ -28,7 +26,7 @@ public class BookingDto {
                 ", userEmail=" + email +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", seats=" + seats +
+                ", rooms=" + rooms +
                 '}';
     }
 }
