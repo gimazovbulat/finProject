@@ -37,10 +37,10 @@ public class ApplicationContextImpl {
     private final static String MAIL_PASSWORD = "mail.password";
     private final static String MAIL_DEBUG = "mail.debug";
 
-    private final static String PROP_DIALECT = "db.hibernate.dialect";
-    private final static String PROP_HIBERNATE_SHOW_SQL = "db.hibernate.show_sql";
-    private final static String PROP_HIBERNATE_ENTITYMANAGER_PACKAGES_TO_SCAN = "db.entitymanager.packages.to.scan";
-    private final static String PROP_HIBERNATE_HBM2DDL_AUTO = "db.hibernate.hbm2ddl.auto";
+    private final static String PROP_DIALECT = "hibernate.dialect";
+    private final static String PROP_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
+    private final static String PROP_HIBERNATE_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
+    private final static String PROP_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     final
     Environment environment;
 

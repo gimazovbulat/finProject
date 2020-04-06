@@ -18,9 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.itis.models.Booking.builder;
-import static ru.itis.models.Booking.toBookingDto;
 import static ru.itis.models.User.fromUserDto;
+
 
 @Transactional
 @Service
@@ -49,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        Booking booking = builder()
+        Booking booking = Booking.builder()
                 .user(fromUserDto(bookingForm.getUserDto()))
                 .startTime(simpleDateFormat.parse(bookingForm.getStartTime()))
                 .endTime(simpleDateFormat.parse(bookingForm.getEndTime()))
@@ -58,7 +57,9 @@ public class BookingServiceImpl implements BookingService {
 
         bookingRepository.book(booking);
 
-        return toBookingDto(booking);
+        booking.getUser().getBookings().add(booking);
+
+        return Booking.toBookingDto(booking);
     }
 
     @Override

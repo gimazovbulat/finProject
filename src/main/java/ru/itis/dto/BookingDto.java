@@ -16,16 +16,16 @@ import java.util.List;
 @Builder
 public class BookingDto {
     private Long id;
-    private UserDto userDto;
+    private String email;
     private Date startTime;
     private Date endTime;
-    private List<Seat> seats;
+    private List<SeatDto> seats;
 
     @Override
     public String toString() {
         return "BookingDto{" +
                 "id=" + id +
-                ", user=" + userDto.getEmail() +
+                ", userEmail=" + email +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", seats=" + seats +

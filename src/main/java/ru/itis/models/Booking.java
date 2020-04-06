@@ -11,6 +11,7 @@ import ru.itis.dto.BookingDto;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -39,9 +40,9 @@ public class Booking {
         return BookingDto.builder()
                 .startTime(booking.getStartTime())
                 .endTime(booking.getEndTime())
-                .seats(booking.getSeats())
+                .seats(booking.getSeats().stream().map(Seat::toSeatDto).collect(Collectors.toList()))
                 .id(booking.getId())
-                .userDto(User.toUserDto(booking.getUser()))
+                .email(booking.getUser().getEmail())
                 .build();
     }
 

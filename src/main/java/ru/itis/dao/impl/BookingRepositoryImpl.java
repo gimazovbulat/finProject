@@ -43,8 +43,8 @@ public class BookingRepositoryImpl implements BookingRepository {
     @Override
     public List<Booking> getUsersBookings(User user) {
         return (List<Booking>) entityManager
-                .createQuery("select booking FROM Booking booking where booking.user = ?1")
-                .setParameter(1, user)
-                .getResultList();
+               .createQuery("select booking FROM Booking booking where booking.user = ?1")
+               .setParameter(1, user)
+               .getResultList();
     }
 }

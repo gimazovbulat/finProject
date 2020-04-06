@@ -40,7 +40,6 @@ public class UsersRepositoryImpl implements UsersRepository {
             user = jdbcTemplate.queryForObject(sql, usersRowmapper, email);
             List<Booking> bookings = bookingRepository.getUsersBookings(user);
             user.setBookings(bookings);
-            System.out.println(user);
         } catch (DataException e) {
             throw new IllegalStateException(e);
         }

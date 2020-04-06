@@ -33,7 +33,8 @@ public class User {
     @JoinTable(schema = "finproj", name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
 
     public User() {
@@ -41,7 +42,7 @@ public class User {
     }
 
 
-    public static User fromUserDto(UserDto userDto){
+    public static User fromUserDto(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
                 .email(userDto.getEmail())
@@ -49,7 +50,7 @@ public class User {
                 .build();
     }
 
-    public static UserDto toUserDto(User user){
+    public static UserDto toUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .avaPath(user.getAvaPath())
@@ -70,5 +71,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getEmail());
+    }
+
+    public List<Booking> getBookings() {
+        if (bookings == null) {
+            return new ArrayList<>();
+        }
+        return bookings;
+
     }
 }
