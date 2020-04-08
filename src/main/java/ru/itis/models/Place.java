@@ -41,8 +41,8 @@ public class Place {
 
     public static PlaceDto toPlaceDto(Place place) {
         List<RoomDto> freeSeats = place.getRooms().stream()
-                .filter(room -> room.getStatus() == SeatStatus.FREE)
-                .map(Room::toSeatDto)
+                .filter(room -> room.getStatus() == RoomStatus.FREE)
+                .map(Room::tooRoomDto)
                 .collect(Collectors.toList());
 
         return PlaceDto.builder()
@@ -50,7 +50,7 @@ public class Place {
                 .photo(FileInfo.toFileDto(place.getPhoto()))
                 .address(place.getAddress())
                 .freeRooms(freeSeats)
-                .rooms(place.getRooms().stream().map(Room::toSeatDto).collect(Collectors.toList()))
+                .rooms(place.getRooms().stream().map(Room::tooRoomDto).collect(Collectors.toList()))
                 .build();
     }
 }

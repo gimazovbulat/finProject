@@ -25,11 +25,13 @@ public class Room {
     private Place place;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private SeatStatus status;
+    private RoomStatus status;
     @ManyToMany(mappedBy = "rooms")
     private List<Booking> booking;
+    @Column(name = "price")
+    private Integer price;
 
-    public Room(Long id, Integer number, Place place, SeatStatus status) {
+    public Room(Long id, Integer number, Place place, RoomStatus status) {
         this.id = id;
         this.number = number;
         this.place = place;
@@ -41,25 +43,28 @@ public class Room {
                 .id(roomDto.getId())
                 .number(roomDto.getNumber())
                 .place(roomDto.getPlace())
+                .price(roomDto.getPrice())
                 .status(roomDto.getStatus())
                 .build();
     }
 
-    public static RoomDto toSeatDto(Room room) {
+    public static RoomDto tooRoomDto(Room room) {
         return RoomDto.builder()
                 .number(room.getNumber())
                 .status(room.getStatus())
                 .place(room.getPlace())
+                .price(room.getPrice())
                 .id(room.getId())
                 .build();
     }
 
     @Override
     public String toString() {
-        return "Seat{" +
+        return "Room{" +
                 "id=" + id +
                 ", number=" + number +
                 ", status=" + status +
+                ", price=" + price +
                 '}';
     }
 }

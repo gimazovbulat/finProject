@@ -3,9 +3,11 @@ package ru.itis.services.impl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itis.aspects.SendSignUpEmail;
 import ru.itis.dao.interfaces.RolesRepository;
 import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dto.SignUpForm;
+import ru.itis.dto.UserDto;
 import ru.itis.models.User;
 import ru.itis.models.UserState;
 import ru.itis.models.Role;
@@ -34,9 +36,10 @@ public class SignUpServiceImpl implements SignUpService {
         this.rolesRepository = rolesRepository;
     }
 
+    @SendSignUpEmail
     @Transactional
     @Override
-    public void signUp(SignUpForm form) {
+    public UserDto signUp(SignUpForm form) {
         Set<Role> roles = new HashSet<>();
         Optional<Role> role = rolesRepository.findById(1);
         role.ifPresent(roles::add);
@@ -47,11 +50,14 @@ public class SignUpServiceImpl implements SignUpService {
                 .userState(UserState.NOT_CONFIRMED)
                 .confirmLink(confirmLink)
                 .avaPath("default")
+                .points(1000)
                 .roles(roles)
                 .build();
 
         usersRepository.save(user);
 
         mailService.sendEmailConfirmationLink(user);
+
+        return User.toUserDto(user);
     }
 }

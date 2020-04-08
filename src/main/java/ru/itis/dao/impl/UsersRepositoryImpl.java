@@ -32,7 +32,7 @@ public class UsersRepositoryImpl implements UsersRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        String sql = "SELECT ut.id, ut.email, ut.password," +
+        String sql = "SELECT ut.id, ut.email, ut.password, ut.points, " +
                 " ut.state, ut.ava_path, role.id as roleId, role.name as roleName, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
                 "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE email = ?";
         User user;
@@ -49,7 +49,7 @@ public class UsersRepositoryImpl implements UsersRepository {
     @Override
     public Optional<User> findByConfirmLink(String confirmLink) {
         User user;
-        String sql = "SELECT ut.id, ut.email, ut.password," +
+        String sql = "SELECT ut.id, ut.email, ut.password, ut.points, " +
                 " ut.state, ut.ava_path, role.id as roleId, role.name as roleName, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
                 "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE confirm_link = ?";
         try {
@@ -62,7 +62,8 @@ public class UsersRepositoryImpl implements UsersRepository {
 
     @Override
     public Long save(User user) {
-        String saveSql = "INSERT INTO finproj.users_table (email, password, state, confirm_link, ava_path) VALUES (?, ?, ?, ?, ?);";
+        System.out.println(user);
+        String saveSql = "INSERT INTO finproj.users_table (email, password, state, confirm_link, ava_path, points) VALUES (?, ?, ?, ?, ?, ?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -73,6 +74,7 @@ public class UsersRepositoryImpl implements UsersRepository {
             ps.setString(3, user.getUserState().getValue());
             ps.setString(4, user.getConfirmLink());
             ps.setString(5, user.getAvaPath());
+            ps.setInt(6, user.getPoints());
             return ps;
         }, keyHolder);
 
@@ -93,7 +95,7 @@ public class UsersRepositoryImpl implements UsersRepository {
     @Override
     public Optional<User> find(Long id) {
         User user;
-        String sql = "SELECT ut.id, ut.email, ut.password," +
+        String sql = "SELECT ut.id, ut.email, ut.password, ut.points, " +
                 " ut.state, ut.ava_path, role.id as roleId, role.name as roleName, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
                 "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE id = ?";
         try {
@@ -108,7 +110,7 @@ public class UsersRepositoryImpl implements UsersRepository {
 
     @Override
     public void update(User user) { //todo roles
-        String updateSql = "UPDATE finproj.users_table SET email = ?, password = ?, state = ?, confirm_link = ?, ava_path = ? WHERE id = ?";
+        String updateSql = "UPDATE finproj.users_table SET email = ?, password = ?, state = ?, confirm_link = ?, ava_path = ?, points = ? WHERE id = ?";
 
         jdbcTemplate.update(updateSql,
                 user.getEmail(),
@@ -116,7 +118,9 @@ public class UsersRepositoryImpl implements UsersRepository {
                 user.getUserState().getValue(),
                 user.getConfirmLink(),
                 user.getAvaPath(),
-                user.getId());
+                user.getPoints(),
+                user.getId()
+        );
     }
 
     @Override

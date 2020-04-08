@@ -21,7 +21,7 @@ public class SignUpController {
     }
 
     @PostMapping("/signUp")
-    public void handleRequest(SignUpForm signUpForm, Model model) {
+    public void handleRequest(SignUpForm signUpForm) {
         signUpService.signUp(signUpForm);
     }
 }

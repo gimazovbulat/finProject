@@ -15,5 +15,6 @@ public class UserDto {
     private Long id;
     private String email;
     private String avaPath;
+    private Integer points;
     private List<BookingDto> bookings;
 }

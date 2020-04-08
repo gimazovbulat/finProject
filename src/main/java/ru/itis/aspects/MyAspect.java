@@ -3,9 +3,7 @@ package ru.itis.aspects;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import ru.itis.dto.BookingDto;
-import ru.itis.dto.MessageDto;
-import ru.itis.dto.RoomDto;
+import ru.itis.dto.*;
 import ru.itis.services.interfaces.MailService;
 
 import java.text.SimpleDateFormat;
@@ -15,22 +13,26 @@ import java.util.stream.Collectors;
 @Aspect
 public class MyAspect {
     private final MailService mailService;
-    private final String TEMPLATE = "Hi %s! Here's your booking rooms: %s. From: %s to %s";
+    private final String BOOKING_TEMPLATE = "Hi %s! Here's your booking rooms: %s. From: %s to %s";
 
     public MyAspect(MailService mailService) {
         this.mailService = mailService;
     }
 
-    @AfterReturning(value = "@annotation(SendMailAnno)", returning = "bookingDto")
-    public void sendBookingToMail(BookingDto bookingDto) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedText = String.format(TEMPLATE,
+    @AfterReturning(value = "@annotation(SendBookingEmail)", returning = "bookingDto")
+    public void formBookingMail(BookingDto bookingDto) {
+        String formattedText = String.format(BOOKING_TEMPLATE,
                 bookingDto.getEmail(),
                 bookingDto.getRooms().stream().map(RoomDto::getNumber).collect(Collectors.toList()),
-                simpleDateFormat.format(bookingDto.getStartTime()),
-                simpleDateFormat.format(bookingDto.getEndTime())
+                bookingDto.getStartDate(),
+                bookingDto.getEndDate()
         );
-        mailService.sendText(bookingDto.getEmail(), new MessageDto(formattedText, "booked rooms"));
+        mailService.sendEmailText(bookingDto.getEmail(), "booking", formattedText);
+    }
+
+    @AfterReturning(value = "@annotation(SendSignUpEmail)", returning = "userDto")
+    public void formWelcomingMail(UserDto userDto){
+        mailService.sendEmailWelcoming(userDto);
     }
 }
 

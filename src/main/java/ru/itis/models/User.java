@@ -36,16 +36,22 @@ public class User {
     @Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
+    @Column(name = "points")
+    private Integer points;
 
     public User() {
         roles = new HashSet<>();
     }
 
+    public User(String email){
+        this.email = email;
+    }
 
     public static User fromUserDto(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
                 .email(userDto.getEmail())
+                .points(userDto.getPoints())
                 .avaPath(userDto.getAvaPath())
                 .build();
     }
@@ -55,6 +61,7 @@ public class User {
                 .id(user.getId())
                 .avaPath(user.getAvaPath())
                 .email(user.getEmail())
+                .points(user.getPoints())
                 .bookings(user.getBookings().stream().map(Booking::toBookingDto).collect(Collectors.toList()))
                 .build();
     }
@@ -79,5 +86,17 @@ public class User {
         }
         return bookings;
 
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", userState=" + userState +
+                ", avaPath='" + avaPath + '\'' +
+                ", roles=" + roles +
+                ", points=" + points +
+                '}';
     }
 }

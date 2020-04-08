@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.itis.models.Place;
-import ru.itis.models.SeatStatus;
+import ru.itis.models.RoomStatus;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +15,6 @@ public class RoomDto {
     private Long id;
     private int number;
     private Place place;
-    private SeatStatus status;
+    private RoomStatus status;
+    private Integer price;
 }

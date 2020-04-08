@@ -6,7 +6,8 @@
     <img style="width: 400px; height: 450px" src="${place.photo.url}">
 
     <#list place.rooms as room>
-        ${room.number}
+        Room number : ${room.number}
+        Room cost : ${room.price}
     </#list>
 
     <form method="post" id="form" action="/booking/place/${place.id}">
@@ -15,12 +16,12 @@
             <p><input type="checkbox" class="svois" name="roomNumbers" value="${room.number}">${room.number}</p>
         </#list>
         <p>
-            <label for="startTime">Start date and time: </label>
-            <input type="date" id="startTime" name="startTime"/>
+            <label for="startDate">Start date and time: </label>
+            <input type="date" id="startDate" name="startDate"/>
         </p>
         <p>
-            <label for="endTime">End date and time: </label>
-            <input type="date" id="endTime" name="endTime"/>
+            <label for="endDate">End date and time: </label>
+            <input type="date" id="endDate" name="endDate"/>
         </p>
         <p><input type="submit" value="book"></p>
 

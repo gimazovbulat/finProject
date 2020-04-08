@@ -5,17 +5,17 @@ import org.springframework.stereotype.Component;
 import ru.itis.dao.interfaces.PlacesRepository;
 import ru.itis.models.Place;
 import ru.itis.models.Room;
-import ru.itis.models.SeatStatus;
+import ru.itis.models.RoomStatus;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
 @Component
-public class SeatRowMapper implements RowMapper<Room> {
+public class RoomRowMapper implements RowMapper<Room> {
     private final PlacesRepository placesRepository;
 
-    public SeatRowMapper(PlacesRepository placesRepository) {
+    public RoomRowMapper(PlacesRepository placesRepository) {
         this.placesRepository = placesRepository;
     }
 
@@ -25,10 +25,17 @@ public class SeatRowMapper implements RowMapper<Room> {
         Integer placeId = rs.getInt("place_id");
         String seatStatus = rs.getString("status");
         Integer number = rs.getInt("number");
+        Integer price = rs.getInt("price");
 
         Optional<Place> optionalPlace = placesRepository.getById(placeId);
         if (optionalPlace.isPresent()) {
-            return new Room(id, number, optionalPlace.get(), SeatStatus.valueOf(seatStatus));
+            return Room.builder()
+                    .id(id)
+                    .price(price)
+                    .number(number)
+                    .place(optionalPlace.get())
+                    .status(RoomStatus.valueOf(seatStatus))
+                    .build();
         }
         throw new IllegalStateException(); //todo exception про отсут строку надо бы
     }

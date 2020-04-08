@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,18 +16,20 @@ import java.util.List;
 public class BookingDto {
     private Long id;
     private String email;
-    private Date startTime;
-    private Date endTime;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private List<RoomDto> rooms;
+    private PaymentDto paymentDto;
 
     @Override
     public String toString() {
         return "BookingDto{" +
                 "id=" + id +
                 ", userEmail=" + email +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 ", rooms=" + rooms +
+                ", payment=" + paymentDto.getCost() +
                 '}';
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import ru.itis.dto.MessageDto;
+import ru.itis.dto.UserDto;
 import ru.itis.models.User;
 import ru.itis.services.interfaces.MailService;
 import ru.itis.services.interfaces.TemplateDrawer;
@@ -32,38 +32,56 @@ public class MailServiceImpl implements MailService {
     @Value("${mail.username}")
     private String FROM;
 
+    @Override
     public void sendEmailConfirmationLink(User user) {
-        String mailText =
-                CONFIRM_URL + user.getConfirmLink();
+        String mailText = CONFIRM_URL + user.getConfirmLink();
 
         Map<String, Object> model = new HashMap<>();
         model.put("user", user);
         model.put("link", mailText);
 
         String templateAsString = templateDrawer.getPageAsString("mail", model);
+        execSendTemplate(user.getEmail(), "emai confirmation", templateAsString);
+    }
+
+    @Override
+    public void sendEmailText(String email, String subject, String text) {
+        execSendText(email, subject, text);
+    }
+
+    @Override
+    public void sendEmailWelcoming(UserDto user) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("user", user);
+
+        String templateAsString = templateDrawer.getPageAsString("welcoming", model);
+        execSendTemplate(user.getEmail(), "welcoming", templateAsString);
+    }
+
+    private void execSendText(String email, String subject, String text) {
         executorService.submit(() -> {
-            MimeMessage message = sender.createMimeMessage();
-            try {
-                MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
-                messageHelper.setTo(user.getEmail());
-                messageHelper.setSubject("Подтерждение регистрации");
-                messageHelper.setText(templateAsString, true);
-                messageHelper.setFrom(FROM);
-            } catch (javax.mail.MessagingException e) {
-                throw new IllegalArgumentException(e);
-            }
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject(subject);
+            message.setText(text);
+            message.setFrom(FROM);
+
             sender.send(message);
         });
     }
 
-    public void sendText(String email, MessageDto messageDto) {
+    private void execSendTemplate(String email, String subject, String text) {
         executorService.submit(() -> {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(email);
-            message.setSubject(messageDto.getSubject());
-            message.setText(messageDto.getText());
-            message.setFrom(FROM);
-
+            MimeMessage message = sender.createMimeMessage();
+            try {
+                MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+                messageHelper.setTo(email);
+                messageHelper.setSubject(subject);
+                messageHelper.setText(text, true);
+                messageHelper.setFrom(FROM);
+            } catch (javax.mail.MessagingException e) {
+                throw new IllegalArgumentException(e);
+            }
             sender.send(message);
         });
     }

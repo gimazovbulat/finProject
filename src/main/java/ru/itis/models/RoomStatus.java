@@ -1,11 +1,11 @@
 package ru.itis.models;
 
-public enum SeatStatus {
+public enum RoomStatus {
     FREE("FREE"), BOOKED("BOOKED"), BOUGHT("BOUGHT");
 
     String state;
 
-    SeatStatus(String state) {
+    RoomStatus(String state) {
         this.state = state;
     }
 

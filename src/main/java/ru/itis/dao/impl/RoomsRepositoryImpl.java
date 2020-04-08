@@ -4,7 +4,7 @@ import org.hibernate.exception.DataException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.itis.dao.interfaces.RoomsRepository;
-import ru.itis.dao.rowmappers.SeatRowMapper;
+import ru.itis.dao.rowmappers.RoomRowMapper;
 import ru.itis.models.Room;
 
 import javax.persistence.EntityManager;
@@ -15,19 +15,19 @@ import java.util.Optional;
 @Repository
 public class RoomsRepositoryImpl implements RoomsRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final SeatRowMapper seatRowMapper;
+    private final RoomRowMapper roomRowMapper;
     @PersistenceContext
     EntityManager entityManager;
 
     public RoomsRepositoryImpl(JdbcTemplate jdbcTemplate,
-                               SeatRowMapper seatRowMapper) {
+                               RoomRowMapper roomRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
-        this.seatRowMapper = seatRowMapper;
+        this.roomRowMapper = roomRowMapper;
     }
 
     @Override
     public Long save(Room room) {
-        if (room.getId() <= 0) {
+        if (room.getId() == null || room.getId() <= 0) {
             entityManager.persist(room);
         } else {
             entityManager.merge(room);
@@ -59,7 +59,7 @@ public class RoomsRepositoryImpl implements RoomsRepository {
     public Optional<Room> findByPlaceAndNumber(Integer placeId, Integer number) {
         String sql = "SELECT * FROM finproj.rooms WHERE place_id = ? AND number = ?";
         try {
-            Room room = jdbcTemplate.queryForObject(sql, seatRowMapper, placeId, number);
+            Room room = jdbcTemplate.queryForObject(sql, roomRowMapper, placeId, number);
             return Optional.of(room);
         } catch (DataException e) {
             throw new IllegalStateException(e);

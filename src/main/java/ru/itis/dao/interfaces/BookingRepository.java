@@ -6,13 +6,8 @@ import ru.itis.models.User;
 import java.util.Date;
 import java.util.List;
 
-public interface BookingRepository {
-    void book(Booking booking);
-
-    void removeBooking(Booking booking);
-
+public interface BookingRepository extends CrudRepository<Long, Booking>{
     void removeOverdue(Date date);
 
     List<Booking> getUsersBookings(User user);
-
 }

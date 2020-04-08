@@ -2,14 +2,12 @@ package ru.itis.dao.rowmappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.itis.models.Booking;
+import ru.itis.models.Role;
 import ru.itis.models.User;
 import ru.itis.models.UserState;
-import ru.itis.models.Role;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 @Component
 public class UsersRowMapper implements RowMapper<User> {
@@ -26,6 +24,7 @@ public class UsersRowMapper implements RowMapper<User> {
             String avaPath = rs.getString("ava_path");
             Integer roleId = rs.getInt("roleId");
             String rolName = rs.getString("roleName");
+            Integer points = rs.getInt("points");
 
             user.setId(id);
             user.setEmail(email);
@@ -33,6 +32,7 @@ public class UsersRowMapper implements RowMapper<User> {
             user.setAvaPath(avaPath);
             user.setConfirmLink(confirmLink);
             user.setUserState(userState);
+            user.setPoints(points);
             user.getRoles().add(new Role(roleId, rolName));
         }
         while (rs.next());
