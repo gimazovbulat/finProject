@@ -17,6 +17,7 @@ public class ConfirmServiceImpl implements ConfirmService {
         this.usersRepository = usersRepository;
     }
 
+    @SendSignUpEmail
     @Override
     public boolean confirm(String confirmLink) {
         Optional<User> optionalUser = usersRepository.findByConfirmLink(confirmLink);
