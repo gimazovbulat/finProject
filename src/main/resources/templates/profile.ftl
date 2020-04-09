@@ -1,15 +1,9 @@
 <html>
 <#if user??>
-    ${user.email}
-    <img src="${user.avaPath}">
-
-<#list user.bookings as booking>
-    <#list booking.rooms as room>
-        place address: ${room.place.address}<br>
-        room: ${room.number}
-    </#list>
-
-</#list>
+    ${user.email}<br>
+    Points: ${user.points}<br>
+    <img src="${user.avaPath}"><br>
+<a href="/users/${user.id}/bookings">My bookings</a>
 </#if>
 
 </html>

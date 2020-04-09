@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component("jwtAuthenticationFilter")
@@ -25,7 +24,7 @@ public class TokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = jwtUtils.resolveToken((HttpServletRequest) servletRequest);
         if (token != null) {
-            boolean valid = jwtUtils.validateToken(token, (HttpServletRequest)servletRequest);
+            boolean valid = jwtUtils.validateToken(token, (HttpServletRequest) servletRequest);
             if (valid) {
                 Authentication authentication = new JwtAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);

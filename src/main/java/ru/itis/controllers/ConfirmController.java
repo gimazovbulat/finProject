@@ -19,7 +19,7 @@ public class ConfirmController {
         if (isConfirmed) {
             return "redirect:/signIn";
         } else {
-           return "error";
+            return "error";
         }
     }
 }

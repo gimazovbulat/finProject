@@ -2,14 +2,26 @@
     <meta charset="UTF-8">
 <body>
 <#if place??>
-    ${place.address}
+    ${place.address}<br>
     <img style="width: 400px; height: 450px" src="${place.photo.url}">
 
-    <#list place.rooms as room>
-        Room number : ${room.number}
-        Room cost : ${room.price}
-    </#list>
-
+    <table>
+        <tr>
+            <th>Room</th>
+            <th>Room price</th>
+        </tr>
+        <#list place.rooms as room>
+            <tr>
+                <td>
+                    ${room.number}
+                </td>
+                <td>
+                    ${room.price}
+                </td>
+            </tr>
+        </#list>
+    </table><br>
+Free rooms
     <form method="post" id="form" action="/booking/place/${place.id}">
         <p><b></b></p>
         <#list place.freeRooms as room>

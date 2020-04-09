@@ -9,7 +9,7 @@ import ru.itis.models.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,27 +47,39 @@ public class BookingRepositoryImpl implements BookingRepository {
     }
 
     @Override
-    public void removeOverdue(Date date) {
-        List<Booking> resultList = entityManager
-                .createQuery("select booking from Booking booking where booking.endDate < ?1")
+    public void removeOverdue(LocalDate date) {
+        List<Booking> overdueBookings = entityManager
+                .createQuery("select booking from Booking booking where booking.endDate < ?1 and booking.paid = ?2")
                 .setParameter(1, date)
+                .setParameter(2, false)
                 .getResultList();
 
-        resultList.forEach(booking -> booking.getRooms().forEach(room -> room.setStatus(RoomStatus.FREE)));
-        System.out.println(resultList);
+        overdueBookings.forEach(booking -> booking.getRooms().forEach(room -> room.setStatus(RoomStatus.FREE)));
 
         entityManager
                 .createQuery("DELETE from Booking where endDate < ?1")
                 .setParameter(1, date)
                 .executeUpdate();
-
     }
 
     @Override
     public List<Booking> getUsersBookings(User user) {
         return (List<Booking>) entityManager
-               .createQuery("select booking FROM Booking booking where booking.user = ?1")
-               .setParameter(1, user)
-               .getResultList();
+                .createQuery("select booking FROM Booking booking where booking.user = ?1")
+                .setParameter(1, user)
+                .getResultList();
+    }
+
+    @Override
+    public void resetRooms(LocalDate date) { //мб какой-нить батч сейв сделать
+        List<Booking> oldBookings = entityManager
+                .createQuery("select booking from Booking booking where booking.endDate < ?1")
+                .setParameter(1, date)
+                .getResultList();
+
+        oldBookings.forEach(booking -> booking.getRooms().forEach(room -> {
+            room.setStatus(RoomStatus.FREE);
+            roomsRepository.save(room);
+        }));
     }
 }

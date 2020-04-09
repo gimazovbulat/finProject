@@ -25,7 +25,7 @@ public class FileInfo {
     private String type;
     private String url;
 
-    public static FileInfo fromFileInfoDto(FileInfoDto fileInfoDto){
+    public static FileInfo fromFileInfoDto(FileInfoDto fileInfoDto) {
         return FileInfo.builder()
                 .id(fileInfoDto.getId())
                 .originalFileName(fileInfoDto.getOriginalFileName())
@@ -35,7 +35,7 @@ public class FileInfo {
                 .build();
     }
 
-    public static FileInfoDto toFileDto(FileInfo fileInfo){
+    public static FileInfoDto toFileDto(FileInfo fileInfo) {
         return FileInfoDto.builder()
                 .id(fileInfo.getId())
                 .originalFileName(fileInfo.getOriginalFileName())

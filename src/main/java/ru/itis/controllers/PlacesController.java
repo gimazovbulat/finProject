@@ -9,7 +9,6 @@ import ru.itis.dto.PlaceDto;
 import ru.itis.services.interfaces.PlacesService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class PlacesController {

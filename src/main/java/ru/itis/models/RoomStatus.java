@@ -1,7 +1,7 @@
 package ru.itis.models;
 
 public enum RoomStatus {
-    FREE("FREE"), BOOKED("BOOKED"), BOUGHT("BOUGHT");
+    FREE("FREE"), BOOKED("BOOKED");
 
     String state;
 

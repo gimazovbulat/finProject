@@ -27,7 +27,7 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
     @ManyToMany(mappedBy = "rooms")
-    private List<Booking> booking;
+    private List<Booking> booki5ng;
     @Column(name = "price")
     private Integer price;
 

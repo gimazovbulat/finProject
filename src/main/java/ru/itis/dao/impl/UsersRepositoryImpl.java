@@ -9,8 +9,8 @@ import ru.itis.dao.interfaces.BookingRepository;
 import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dao.rowmappers.UsersRowMapper;
 import ru.itis.models.Booking;
-import ru.itis.models.User;
 import ru.itis.models.Role;
+import ru.itis.models.User;
 
 import java.sql.PreparedStatement;
 import java.util.List;

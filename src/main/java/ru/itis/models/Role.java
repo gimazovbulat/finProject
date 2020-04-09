@@ -1,9 +1,7 @@
 package ru.itis.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.itis.models.User;
 
 import javax.persistence.*;
 import java.util.Set;

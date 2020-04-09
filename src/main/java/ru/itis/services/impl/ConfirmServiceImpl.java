@@ -1,6 +1,7 @@
 package ru.itis.services.impl;
 
 import org.springframework.stereotype.Component;
+import ru.itis.aspects.SendSignUpEmail;
 import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.models.User;
 import ru.itis.models.UserState;
@@ -23,7 +24,7 @@ public class ConfirmServiceImpl implements ConfirmService {
             User user = optionalUser.get();
             user.setUserState(UserState.CONFIRMED);
             usersRepository.update(user);
-           return true;
+            return true;
         }
         throw new IllegalStateException();
     }
