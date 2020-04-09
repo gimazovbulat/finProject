@@ -26,7 +26,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     @Override
     public List<? extends Place> getAll(int page, int size) {
         String sql = "SELECT * FROM finproj.places LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(sql, placeRowMapper, size, page - 1);
+        return jdbcTemplate.query(sql, placeRowMapper, size, --page);
     }
 
     @Override

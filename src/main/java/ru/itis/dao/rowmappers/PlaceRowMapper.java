@@ -21,15 +21,12 @@ public class PlaceRowMapper implements RowMapper<Place> {
     @Override
     public Place mapRow(ResultSet rs, int rowNum) throws SQLException {
         Place place = new Place();
-        do {
             String address = rs.getString("address");
             Integer id = rs.getInt("id");
             Optional<FileInfo> photo = filesRepository.find(rs.getLong("photo_id"));
             photo.ifPresent(place::setPhoto);
             place.setAddress(address);
             place.setId(id);
-        }
-        while (rs.next());
         return place;
     }
 }

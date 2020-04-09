@@ -49,7 +49,7 @@ public class SignUpServiceImpl implements SignUpService {
                 .password(passwordEncoder.encode(form.getPassword()))
                 .userState(UserState.NOT_CONFIRMED)
                 .confirmLink(confirmLink)
-                .avaPath("default")
+                .avaPath("/files/=c82217a0-7a6a-11ea-bc55-0242ac130003.png")
                 .points(1000)
                 .roles(roles)
                 .build();

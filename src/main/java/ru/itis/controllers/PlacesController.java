@@ -1,5 +1,6 @@
 package ru.itis.controllers;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,9 @@ public class PlacesController {
         this.placesService = placesService;
     }
 
+    @Value("${size}")
+    private int size;
+
     @GetMapping("/places/{id}")
     public String getPlace(@PathVariable("id") Integer id, Model model) {
         PlaceDto place = placesService.getById(id);
@@ -27,9 +31,11 @@ public class PlacesController {
 
     @GetMapping("/places")
     public String getPage(@RequestParam("page") Integer page, Model model) {
-        List<PlaceDto> places = placesService.getAll(page, 10);
+        List<PlaceDto> places = placesService.getAll(page, size);
         model.addAttribute("places", places);
-        model.addAttribute("count", placesService.getCount());
+        int count = placesService.getCount() / size;
+        count = count == 0 ? 1 : count;
+        model.addAttribute("count", count);
         return "places";
     }
 }

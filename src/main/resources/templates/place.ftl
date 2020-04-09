@@ -42,10 +42,4 @@ Free rooms
 
 </#if>
 
-<#if booking??>
-    you booked rooms:
-    <#list booking.rooms as room>
-        ${room.number}
-    </#list>
-</#if>
 </body>
