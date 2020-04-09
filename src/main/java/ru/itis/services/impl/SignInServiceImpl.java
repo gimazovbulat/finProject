@@ -2,7 +2,6 @@ package ru.itis.services.impl;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dto.SignInForm;

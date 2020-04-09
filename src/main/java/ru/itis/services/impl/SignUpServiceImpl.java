@@ -8,9 +8,9 @@ import ru.itis.dao.interfaces.RolesRepository;
 import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dto.SignUpForm;
 import ru.itis.dto.UserDto;
+import ru.itis.models.Role;
 import ru.itis.models.User;
 import ru.itis.models.UserState;
-import ru.itis.models.Role;
 import ru.itis.services.interfaces.MailService;
 import ru.itis.services.interfaces.SignUpService;
 
@@ -36,7 +36,6 @@ public class SignUpServiceImpl implements SignUpService {
         this.rolesRepository = rolesRepository;
     }
 
-    @SendSignUpEmail
     @Transactional
     @Override
     public UserDto signUp(SignUpForm form) {

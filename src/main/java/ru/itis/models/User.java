@@ -43,7 +43,7 @@ public class User {
         roles = new HashSet<>();
     }
 
-    public User(String email){
+    public User(String email) {
         this.email = email;
     }
 

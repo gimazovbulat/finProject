@@ -3,10 +3,11 @@ package ru.itis.aspects;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import ru.itis.dto.*;
+import ru.itis.dto.BookingDto;
+import ru.itis.dto.RoomDto;
+import ru.itis.dto.UserDto;
 import ru.itis.services.interfaces.MailService;
 
-import java.text.SimpleDateFormat;
 import java.util.stream.Collectors;
 
 @Component
@@ -31,7 +32,7 @@ public class MyAspect {
     }
 
     @AfterReturning(value = "@annotation(SendSignUpEmail)", returning = "userDto")
-    public void formWelcomingMail(UserDto userDto){
+    public void formWelcomingMail(UserDto userDto) {
         mailService.sendEmailWelcoming(userDto);
     }
 }

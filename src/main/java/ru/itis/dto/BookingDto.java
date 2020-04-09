@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -19,7 +18,8 @@ public class BookingDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private List<RoomDto> rooms;
-    private PaymentDto paymentDto;
+    private boolean paid;
+    private Integer cost;
 
     @Override
     public String toString() {
@@ -29,7 +29,7 @@ public class BookingDto {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", rooms=" + rooms +
-                ", payment=" + paymentDto.getCost() +
+                ", paid=" + paid +
                 '}';
     }
 }

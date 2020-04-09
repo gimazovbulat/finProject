@@ -33,8 +33,8 @@ public class Booking {
             inverseJoinColumns = @JoinColumn(name = "room_id"))
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Room> rooms;
-    @OneToOne(mappedBy = "booking")
-    private Payment payment;
+    private boolean paid;
+    private Integer cost;
 
     public static BookingDto toBookingDto(Booking booking) {
         return BookingDto.builder()
@@ -42,8 +42,9 @@ public class Booking {
                 .endDate(booking.getEndDate())
                 .rooms(booking.getRooms().stream().map(Room::tooRoomDto).collect(Collectors.toList()))
                 .id(booking.getId())
-                .paymentDto(Payment.toPaymentDto(booking.getPayment()))
                 .email(booking.getUser().getEmail())
+                .cost(booking.getCost())
+                .paid(booking.isPaid())
                 .build();
     }
 
@@ -52,7 +53,6 @@ public class Booking {
                 .endDate(bookingDto.getEndDate())
                 .startDate(bookingDto.getStartDate())
                 .id(bookingDto.getId())
-                .payment(Payment.fromPaymentDto(bookingDto.getPaymentDto()))
                 .user(new User(bookingDto.getEmail()))
                 .rooms(bookingDto.getRooms().stream().map(Room::fromSeatDto).collect(Collectors.toList()))
                 .build();
@@ -66,7 +66,7 @@ public class Booking {
                 ", endDate=" + endDate +
                 ", rooms=" + rooms +
                 ", user=" + user.getEmail() +
-                ", payment=" + payment.getCost() +
+                ", paid=" + paid +
                 '}';
     }
 }

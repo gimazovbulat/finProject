@@ -5,12 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.aspects.SendBookingEmail;
 import ru.itis.dao.interfaces.BookingRepository;
-import ru.itis.dao.interfaces.PaymentRepository;
 import ru.itis.dao.interfaces.RoomsRepository;
+import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dto.BookingDto;
 import ru.itis.dto.BookingForm;
 import ru.itis.dto.RoomDto;
-import ru.itis.models.*;
+import ru.itis.models.Booking;
+import ru.itis.models.Room;
+import ru.itis.models.RoomStatus;
+import ru.itis.models.User;
 import ru.itis.services.interfaces.BookingService;
 
 import java.time.LocalDate;
@@ -29,14 +32,14 @@ import static ru.itis.models.User.fromUserDto;
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final RoomsRepository roomsRepository;
-    private final PaymentRepository paymentRepository;
+    private final UsersRepository usersRepository;
 
     public BookingServiceImpl(BookingRepository bookingRepository,
                               RoomsRepository roomsRepository,
-                              PaymentRepository paymentRepository) {
+                              UsersRepository usersRepository) {
         this.bookingRepository = bookingRepository;
         this.roomsRepository = roomsRepository;
-        this.paymentRepository = paymentRepository;
+        this.usersRepository = usersRepository;
     }
 
     @SendBookingEmail
@@ -56,25 +59,16 @@ public class BookingServiceImpl implements BookingService {
         LocalDate startDate = LocalDate.parse(bookingForm.getStartDate(), formatter);
         LocalDate endDate = LocalDate.parse(bookingForm.getEndDate(), formatter);
 
-        Payment payment = Payment.builder()
-                .cost(calculateCost(startDate, endDate, rooms.stream().map(Room::tooRoomDto).collect(Collectors.toList())))
-                .paymentStatus(PaymentStatus.NOT_PAYED)
-                .build();
-
         Booking booking = Booking.builder()
                 .user(fromUserDto(bookingForm.getUserDto()))
                 .startDate(startDate)
                 .endDate(endDate)
                 .rooms(rooms)
-                .payment(payment)
+                .paid(false)
+                .cost(calculateCost(startDate, endDate, rooms.stream().map(Room::tooRoomDto).collect(Collectors.toList())))
                 .build();
 
         bookingRepository.save(booking);
-
-        payment.setBooking(booking);
-        System.out.println("booking " + booking);
-        System.out.println("payment " + payment);
-        paymentRepository.save(payment);
 
         booking.getUser().getBookings().add(booking);
 
@@ -96,6 +90,31 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalStateException("booking with that id doesn't exist");
         }
     }
+
+    @Override
+    public BookingDto pay(Long bookingId) {
+        Optional<Booking> optionalBooking = bookingRepository.find(bookingId);
+        if (optionalBooking.isPresent()) {
+            Booking booking = optionalBooking.get();
+            Optional<User> optionalUser = usersRepository.findByEmail(booking.getUser().getEmail());
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                Integer userPoints = user.getPoints();
+                if (userPoints < booking.getCost()) {
+                    throw new IllegalStateException("You don't have enough points :(");
+                } else {
+                    user.setPoints(user.getPoints() - booking.getCost());
+                    usersRepository.update(user);
+                    booking.setPaid(true);
+                }
+                return Booking.toBookingDto(booking);
+            }
+        }
+        throw new IllegalStateException();
+
+    }
+
 
     private Integer calculateCost(LocalDate startDate, LocalDate endDate, List<RoomDto> rooms) {
         Period period = Period.between(startDate, endDate);

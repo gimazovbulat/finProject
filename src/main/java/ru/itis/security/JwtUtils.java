@@ -52,10 +52,7 @@ public class JwtUtils {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(encodedSecret).parseClaimsJws(token);
 
-            if (claims.getBody().getExpiration().before(new Date())) {
-                return false;
-            }
-            return true;
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             Cookie[] cookies = request.getCookies();
             for (Cookie cookie : cookies) {

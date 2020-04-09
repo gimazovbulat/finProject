@@ -13,9 +13,9 @@ public class RolesRepositoryImpl implements RolesRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private RowMapper<Role> rowMapper = ((rs, rowNum) -> {
-       String roleName = rs.getString("name");
-       Integer roleId = rs.getInt("id");
-       return new Role(roleId, roleName);
+        String roleName = rs.getString("name");
+        Integer roleId = rs.getInt("id");
+        return new Role(roleId, roleName);
     });
 
     public RolesRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -33,5 +33,6 @@ public class RolesRepositoryImpl implements RolesRepository {
     public Optional<Role> findByName(String name) {
         String sql = "SELECT * FROM finproj.roles WHERE name = ?";
         Role role = jdbcTemplate.queryForObject(sql, rowMapper, name);
-        return Optional.of(role);    }
+        return Optional.of(role);
+    }
 }
