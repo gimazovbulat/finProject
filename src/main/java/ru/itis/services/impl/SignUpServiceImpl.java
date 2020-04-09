@@ -38,7 +38,6 @@ public class SignUpServiceImpl implements SignUpService {
 
     @Transactional
     @Override
-    @SendSignUpEmail
     public UserDto signUp(SignUpForm form) {
         Set<Role> roles = new HashSet<>();
         Optional<Role> role = rolesRepository.findById(1);
@@ -49,8 +48,8 @@ public class SignUpServiceImpl implements SignUpService {
                 .password(passwordEncoder.encode(form.getPassword()))
                 .userState(UserState.NOT_CONFIRMED)
                 .confirmLink(confirmLink)
-                .avaPath("default")
-                .points(1000)
+                .avaPath("/files/=c82217a0-7a6a-11ea-bc55-0242ac130003.png")
+                .points(0)
                 .roles(roles)
                 .build();
 

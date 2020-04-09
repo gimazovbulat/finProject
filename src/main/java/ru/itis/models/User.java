@@ -62,6 +62,7 @@ public class User {
                 .avaPath(user.getAvaPath())
                 .email(user.getEmail())
                 .points(user.getPoints())
+                .userState(user.getUserState())
                 .bookings(user.getBookings().stream().map(Booking::toBookingDto).collect(Collectors.toList()))
                 .build();
     }

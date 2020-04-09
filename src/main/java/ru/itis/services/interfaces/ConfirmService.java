@@ -1,5 +1,7 @@
 package ru.itis.services.interfaces;
 
+import ru.itis.dto.UserDto;
+
 public interface ConfirmService {
-    boolean confirm(String confirmLink);
+    UserDto confirm(String confirmLink);
 }

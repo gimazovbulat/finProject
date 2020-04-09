@@ -60,6 +60,6 @@ public class BookingController {
         PlaceDto place = placesService.getById(placeId);
 
         model.addAttribute("place", place);
-        return "place";
+        return "redirect:/places/" + placeId;
     }
 }

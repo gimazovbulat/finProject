@@ -1,8 +1,10 @@
 package ru.itis.services.impl;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.itis.aspects.SendSignUpEmail;
 import ru.itis.dao.interfaces.UsersRepository;
+import ru.itis.dto.UserDto;
 import ru.itis.models.User;
 import ru.itis.models.UserState;
 import ru.itis.services.interfaces.ConfirmService;
@@ -17,15 +19,19 @@ public class ConfirmServiceImpl implements ConfirmService {
         this.usersRepository = usersRepository;
     }
 
+    @Value("${welcome.points}")
+    private int points;
+
     @SendSignUpEmail
     @Override
-    public boolean confirm(String confirmLink) {
+    public UserDto confirm(String confirmLink) {
         Optional<User> optionalUser = usersRepository.findByConfirmLink(confirmLink);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setUserState(UserState.CONFIRMED);
+            user.setPoints(points);
             usersRepository.update(user);
-            return true;
+            return User.toUserDto(user);
         }
         throw new IllegalStateException();
     }
