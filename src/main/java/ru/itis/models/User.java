@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import ru.itis.dto.UserDto;
 
 import javax.persistence.*;
@@ -35,9 +37,13 @@ public class User {
     private Set<Role> roles;
     @Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "user")
+    @Transient
     private List<Booking> bookings;
     @Column(name = "points")
     private Integer points;
+    @ManyToMany(mappedBy = "chatters")
+    @Transient
+    private List<ChatRoom> chatRooms;
 
     public User() {
         roles = new HashSet<>();
