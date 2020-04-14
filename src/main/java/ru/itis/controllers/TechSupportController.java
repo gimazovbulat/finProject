@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import ru.itis.dto.ChatRoomDto;
 import ru.itis.services.interfaces.ChatRoomsService;
 
+import java.util.UUID;
+
 @Controller
 public class TechSupportController {
     private final ChatRoomsService chatRoomsService;
@@ -27,6 +29,7 @@ public class TechSupportController {
     public String getTechSupportSingleRoomPage(@PathVariable("id") Long roomId, Model model) {
         ChatRoomDto room = chatRoomsService.getRoom(roomId);
         model.addAttribute("room", room);
+        model.addAttribute("pageId", UUID.randomUUID());
         return "techSupportSingleRoom";
     }
 }

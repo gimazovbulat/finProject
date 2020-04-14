@@ -16,7 +16,7 @@
                 integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
                 crossorigin="anonymous"></script>
         <script>
-            function getChat(roomId) {
+            function getChat(roomId, pageId) {
                 $.ajax({
                     url: "/suppMessages",
                     method: "GET",
@@ -29,13 +29,13 @@
                         for (let i in response) {
                             $('#messages').append('<li>' + response[i]['text'] + '</li>');
                         }
-                        receiveMessages(roomId)
+                        receiveMessages(roomId, pageId)
                     }
                 })
             }
         </script>
         <script>
-            function sendMessage(roomId, text) {
+            function sendMessage(roomId, text, pageId) {
                 let body = {
                     roomId: roomId,
                     text: text
@@ -48,20 +48,21 @@
                     contentType: "application/json",
                     dataType: "json",
                     complete: function () {
-                        receiveMessages(roomId)
+                        receiveMessages(roomId, pageId)
                     }
                 });
             }
         </script>
 
         <script>
-            function receiveMessages(roomId) {
+            function receiveMessages(roomId, pageId) {
                 $.ajax({
                     url: "/message",
                     method: "GET",
                     dataType: "json",
                     data: {
-                        "roomId": roomId
+                        "roomId": roomId,
+                        "pageId": pageId
                     },
                     contentType: "application/json",
                     success: function (response) {
@@ -69,18 +70,18 @@
                         for (let i in response){
                             $('#messages').append('<li>' + response[i]['text'] + '</li>');
                         }
-                        receiveMessages(roomId);
+                        receiveMessages(roomId, pageId);
                     }
                 })
             }
         </script>
     </head>
 </head>
-<body onload="getChat(${room.id})">
+<body onload="getChat(${room.id}, '${pageId}')">
 <div>
     <input id="message" placeholder="message">
     <button onclick="sendMessage('${room.id}',
-            $('#message').val())">send
+            $('#message').val(), '${pageId}')">send
     </button>
 </div>
 <ul id="messages">

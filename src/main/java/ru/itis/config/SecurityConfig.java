@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/signIn", "/signUp", "/confirm/*", "/", "/files/*", "/places", "/places/*",
-                        "/logout")
+                        "/logout", "/message", "/allMessages")
                 .permitAll()
                 .antMatchers("/admin")
                 .hasAuthority("ADMIN")

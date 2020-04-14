@@ -2,7 +2,6 @@ package ru.itis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.dto.ChatMessageDto;
@@ -10,7 +9,7 @@ import ru.itis.dto.ChatMessageFormDto;
 import ru.itis.dto.ChatRoomDto;
 import ru.itis.dto.UserDto;
 import ru.itis.security.CurrentUser;
-import ru.itis.services.impl.MessagesQueue;
+import ru.itis.services.impl.MessagesComponent;
 import ru.itis.services.interfaces.ChatMessagesService;
 import ru.itis.services.interfaces.ChatRoomsService;
 import ru.itis.services.interfaces.UsersService;
@@ -24,7 +23,7 @@ public class ChatMessagesController {
     private final UsersService usersService;
     private final ChatRoomsService chatRoomsService;
     @Autowired
-    MessagesQueue messagesQueue;
+    MessagesComponent messagesComponent;
 
     public ChatMessagesController(ChatMessagesService chatMessagesService,
                                   UsersService usersService,
@@ -60,12 +59,12 @@ public class ChatMessagesController {
     }
 
     @GetMapping("/message")
-    public ResponseEntity<List<ChatMessageDto>> getMessage(@RequestParam("roomId") Long roomId, @CurrentUser UserDetails userDetails) throws InterruptedException {
+    public ResponseEntity<List<ChatMessageDto>> getMessage(@RequestParam("roomId") Long roomId,
+                                                           @RequestParam("pageId") String pageId,
+                                                           @CurrentUser UserDetails userDetails) throws InterruptedException {
 //        ChatMessageDto message = chatMessagesService.getMessage(roomId);
 //        return ResponseEntity.ok(message);
-        String email = userDetails.getUsername();
-        UserDto user = usersService.findUser(email);
-        List<ChatMessageDto> messages = messagesQueue.get(roomId, user);
+        List<ChatMessageDto> messages = messagesComponent.get(roomId, pageId);
         System.out.println(messages);
         return ResponseEntity.ok(messages);
     }

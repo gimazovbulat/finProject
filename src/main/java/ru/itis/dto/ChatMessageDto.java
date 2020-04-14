@@ -17,6 +17,7 @@ public class ChatMessageDto {
     private UserDto sender;
     private ChatRoomDto chatRoom;
     private LocalDateTime time;
+    private String page;
 
     @Override
     public String toString() {

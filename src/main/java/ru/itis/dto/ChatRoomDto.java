@@ -9,6 +9,7 @@ import ru.itis.models.ChatRoomType;
 import ru.itis.models.User;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +22,7 @@ public class ChatRoomDto {
     private String name;
     private List<UserDto> chatters;
     private List<ChatMessage> chatMessages;
+    private Set<String> openPages;
 
     @Override
     public String toString() {

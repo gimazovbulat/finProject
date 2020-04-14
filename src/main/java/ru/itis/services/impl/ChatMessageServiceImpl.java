@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 public class ChatMessageServiceImpl implements ChatMessagesService {
     private final ChatMessagesRepository chatMessagesRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final MessagesQueue messagesQueue;
+    private final MessagesComponent messagesComponent;
 
     public ChatMessageServiceImpl(ChatMessagesRepository chatMessagesRepository,
                                   ChatRoomRepository chatRoomRepository,
-                                  MessagesQueue messagesQueue) {
+                                  MessagesComponent messagesComponent) {
         this.chatMessagesRepository = chatMessagesRepository;
         this.chatRoomRepository = chatRoomRepository;
-        this.messagesQueue = messagesQueue;
+        this.messagesComponent = messagesComponent;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ChatMessageServiceImpl implements ChatMessagesService {
         ChatMessage chatMessage = ChatMessage.fromChatMessageDto(chatMessageDto);
         chatMessagesRepository.save(chatMessage);
         try {
-            messagesQueue.add(chatMessageDto);
+            messagesComponent.add(chatMessageDto);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
