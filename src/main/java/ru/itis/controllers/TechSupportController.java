@@ -19,17 +19,22 @@ public class TechSupportController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("rooms/techSupport")
+    @GetMapping("/techSupport/rooms/")
     public String getTechSupportRoomsPage() {
         return "techSupportRooms";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("rooms/techSupport/{id}")
+    @GetMapping("/techSupport/rooms/{id}")
     public String getTechSupportSingleRoomPage(@PathVariable("id") Long roomId, Model model) {
         ChatRoomDto room = chatRoomsService.getRoom(roomId);
         model.addAttribute("room", room);
         model.addAttribute("pageId", UUID.randomUUID());
         return "techSupportSingleRoom";
+    }
+
+    @GetMapping("/admin/techSupport/rooms/")
+    public String getTechSupportRoomsPageForAdmin() {
+        return "adminTechSupportRooms";
     }
 }

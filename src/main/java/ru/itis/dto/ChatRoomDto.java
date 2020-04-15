@@ -22,7 +22,6 @@ public class ChatRoomDto {
     private String name;
     private List<UserDto> chatters;
     private List<ChatMessage> chatMessages;
-    private Set<String> openPages;
 
     @Override
     public String toString() {

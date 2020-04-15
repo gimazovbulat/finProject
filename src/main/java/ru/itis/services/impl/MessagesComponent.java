@@ -2,7 +2,6 @@ package ru.itis.services.impl;
 
 import org.springframework.stereotype.Component;
 import ru.itis.dto.ChatMessageDto;
-import ru.itis.dto.ChatRoomDto;
 
 import java.util.*;
 
@@ -17,19 +16,15 @@ public class MessagesComponent {
     }
 
     public void add(ChatMessageDto message) throws InterruptedException {
+        Long roomId = message.getChatRoom().getId();
+        Set<String> pages = openRooms.get(roomId);
 
-        // полученное сообщение добавляем для всех открытых страниц нашего приложения
-        for (List<ChatMessageDto> pageMessages : messages.values()) {
-            // перед тем как положить сообщение для какой-либо страницы
-            // мы список сообщений блокируем
-            synchronized (pageMessages) {
-                // добавляем сообщение
-                pageMessages.add(message);
-                // говорим, что другие потоки могут воспользоваться этим списком
-                pageMessages.notifyAll();
+        for (String page : pages) {
+            synchronized (messages.get(page)){
+                messages.get(page).add(message);
+                messages.get(page).notifyAll();
             }
         }
-
     }
 
     public List<ChatMessageDto> get(Long roomId, String pageId) throws InterruptedException {

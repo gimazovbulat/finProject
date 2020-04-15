@@ -7,5 +7,5 @@ import java.util.List;
 public interface ChatMessagesService {
     List<ChatMessageDto> getTechSupportMessages(Long roomId);
 
-    void sendMessage(ChatMessageDto chatMessageDto);
+    void receiveMessage(ChatMessageDto chatMessageDto);
 }

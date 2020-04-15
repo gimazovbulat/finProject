@@ -41,7 +41,7 @@ public class ChatMessagesController {
     }
 
     @PostMapping("/message")
-    public ResponseEntity sendMessage(@RequestBody ChatMessageFormDto chatMessageForm, @CurrentUser UserDetails userDetails) {
+    public ResponseEntity receiveMessage(@RequestBody ChatMessageFormDto chatMessageForm, @CurrentUser UserDetails userDetails) {
         String email = userDetails.getUsername();
         UserDto user = usersService.findUser(email);
 
@@ -54,7 +54,7 @@ public class ChatMessagesController {
                 .chatRoom(chatRoom)
                 .build();
 
-        chatMessagesService.sendMessage(chatMessage);
+        chatMessagesService.receiveMessage(chatMessage);
         return ResponseEntity.ok().build();
     }
 
@@ -62,10 +62,7 @@ public class ChatMessagesController {
     public ResponseEntity<List<ChatMessageDto>> getMessage(@RequestParam("roomId") Long roomId,
                                                            @RequestParam("pageId") String pageId,
                                                            @CurrentUser UserDetails userDetails) throws InterruptedException {
-//        ChatMessageDto message = chatMessagesService.getMessage(roomId);
-//        return ResponseEntity.ok(message);
         List<ChatMessageDto> messages = messagesComponent.get(roomId, pageId);
-        System.out.println(messages);
         return ResponseEntity.ok(messages);
     }
 }

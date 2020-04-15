@@ -44,7 +44,7 @@ public class ChatMessageServiceImpl implements ChatMessagesService {
 
     @Transactional
     @Override
-    public void sendMessage(ChatMessageDto chatMessageDto) {
+    public void receiveMessage(ChatMessageDto chatMessageDto) {
         ChatMessage chatMessage = ChatMessage.fromChatMessageDto(chatMessageDto);
         chatMessagesRepository.save(chatMessage);
         try {

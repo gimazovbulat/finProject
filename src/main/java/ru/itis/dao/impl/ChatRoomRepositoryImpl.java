@@ -32,4 +32,17 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
                 .getSingleResult();
         return Optional.of(chatRoom);
     }
+
+    @Override
+    public void saveRoom(ChatRoom chatRoom) {
+        entityManager.persist(chatRoom);
+    }
+
+    @Override
+    public List getAllTechSupportRoomsForAdmin() {
+        List<ChatRoom> roomsForAdmin =
+                entityManager.createQuery("select room from ChatRoom room")
+                .getResultList();
+        return roomsForAdmin;
+    }
 }

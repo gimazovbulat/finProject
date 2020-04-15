@@ -10,6 +10,7 @@ import ru.itis.models.Room;
 import ru.itis.models.User;
 import ru.itis.services.interfaces.ChatRoomsService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class ChatRoomServiceImpl implements ChatRoomsService {
     @Override
     public List<ChatRoomDto> getTechSupportRoomsForUser(UserDto userDto) {
         List<ChatRoom> rooms = chatRoomRepository.getAllTechSupportRoomsForUser(User.fromUserDto(userDto));
+        if (rooms.size() == 0) return Collections.emptyList();
         return rooms.stream().map(ChatRoom::toChatRoomDto).collect(Collectors.toList());
     }
 
@@ -42,5 +44,17 @@ public class ChatRoomServiceImpl implements ChatRoomsService {
             return chatRoomDto;
         }
         throw new IllegalStateException("room doesn't exist");
+    }
+
+    @Transactional
+    @Override
+    public void createRoom(ChatRoomDto chatRoomDto) {
+        chatRoomRepository.saveRoom(ChatRoom.fromChatRoomDto(chatRoomDto));
+    }
+
+    @Override
+    public List<ChatRoomDto> getTechSupportRoomsForAdmin() {
+        List<ChatRoom> roomsForAdmin = chatRoomRepository.getAllTechSupportRoomsForAdmin();
+        return roomsForAdmin.stream().map(ChatRoom::toChatRoomDto).collect(Collectors.toList());
     }
 }
