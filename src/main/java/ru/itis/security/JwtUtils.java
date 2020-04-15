@@ -3,6 +3,7 @@ package ru.itis.security;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 import ru.itis.models.Role;
 import ru.itis.models.User;
 
@@ -68,12 +69,8 @@ public class JwtUtils {
     public String resolveToken(HttpServletRequest req) {
         String reqToken = req.getHeader("Authentication");
         String cookieToken = null;
-        if (req.getCookies() != null) {
-            for (Cookie cookie : req.getCookies()) {
-                if (cookie.getName().equals("Authentication")) {
-                    cookieToken = cookie.getValue();
-                }
-            }
+        if (WebUtils.getCookie(req, "Authentication") != null) {
+            cookieToken = WebUtils.getCookie(req, "Authentication").getValue();
         }
         if (reqToken != null && reqToken.startsWith("Bearer_")) {
             return reqToken.substring(7);
