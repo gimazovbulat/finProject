@@ -47,11 +47,7 @@ public class ChatMessageServiceImpl implements ChatMessagesService {
     public void receiveMessage(ChatMessageDto chatMessageDto) {
         ChatMessage chatMessage = ChatMessage.fromChatMessageDto(chatMessageDto);
         chatMessagesRepository.save(chatMessage);
-        try {
-            messagesComponent.add(chatMessageDto);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        messagesComponent.add(chatMessageDto);
     }
 
 }

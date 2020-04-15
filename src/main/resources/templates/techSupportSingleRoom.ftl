@@ -27,7 +27,10 @@
                     contentType: "application/json",
                     success: function (response) {
                         for (let i in response) {
-                            $('#messages').append('<li>' + response[i]['text'] + '</li>');
+                            $('#messages').append('<li>'
+                                + 'from ' + response[i]['sender']['email'] + '<br>'
+                                + 'text ' + response[i]['text'] + '<br>'
+                                + '</li>');
                         }
                         receiveMessages(roomId, pageId)
                     }
@@ -67,8 +70,11 @@
                     contentType: "application/json",
                     success: function (response) {
                         console.log(response)
-                        for (let i in response){
-                            $('#messages').append('<li>' + response[i]['text'] + '</li>');
+                        for (let i in response) {
+                            $('#messages').append('<li>'
+                                + 'from ' + response[i]['sender']['email'] + '<br>'
+                                + 'text ' + response[i]['text'] + '<br>'
+                                + '</li>');
                         }
                         receiveMessages(roomId, pageId);
                     }
