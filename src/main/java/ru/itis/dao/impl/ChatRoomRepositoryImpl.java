@@ -26,7 +26,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     }
 
     @Override
-    public Optional<ChatRoom> getRoom(Long id) {
+    public Optional<ChatRoom> findById(Long id) {
         ChatRoom chatRoom = (ChatRoom) entityManager.createQuery("select chatRoom from ChatRoom chatRoom where chatRoom.id = ?1")
                 .setParameter(1, id)
                 .getSingleResult();
@@ -34,7 +34,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     }
 
     @Override
-    public void saveRoom(ChatRoom chatRoom) {
+    public void save(ChatRoom chatRoom) {
         entityManager.persist(chatRoom);
     }
 

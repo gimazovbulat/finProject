@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PlacesRepository {
-    List<? extends Place> getAll(int page, int size);
+    List<? extends Place> findAll(int page, int size);
 
-    Optional<Place> getByAddress(String address);
+    Optional<Place> findByAddress(String address);
 
-    Optional<Place> getById(Integer id);
+    Optional<Place> findById(Integer id);
 
     Integer countPlaces();
 }

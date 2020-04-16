@@ -6,7 +6,6 @@ import ru.itis.dao.interfaces.ChatRoomRepository;
 import ru.itis.dto.ChatRoomDto;
 import ru.itis.dto.UserDto;
 import ru.itis.models.ChatRoom;
-import ru.itis.models.Room;
 import ru.itis.models.User;
 import ru.itis.services.interfaces.ChatRoomsService;
 
@@ -38,7 +37,7 @@ public class ChatRoomServiceImpl implements ChatRoomsService {
 
     @Override
     public ChatRoomDto getRoom(Long id) {
-        Optional<ChatRoom> optionalRoom = chatRoomRepository.getRoom(id);
+        Optional<ChatRoom> optionalRoom = chatRoomRepository.findById(id);
         if (optionalRoom.isPresent()){
             ChatRoomDto chatRoomDto = ChatRoom.toChatRoomDto(optionalRoom.get());
             return chatRoomDto;
@@ -49,7 +48,7 @@ public class ChatRoomServiceImpl implements ChatRoomsService {
     @Transactional
     @Override
     public void createRoom(ChatRoomDto chatRoomDto) {
-        chatRoomRepository.saveRoom(ChatRoom.fromChatRoomDto(chatRoomDto));
+        chatRoomRepository.save(ChatRoom.fromChatRoomDto(chatRoomDto));
     }
 
     @Override

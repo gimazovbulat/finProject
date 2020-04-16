@@ -24,13 +24,13 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     }
 
     @Override
-    public List<? extends Place> getAll(int page, int size) {
+    public List<? extends Place> findAll(int page, int size) {
         String sql = "SELECT * FROM finproj.places LIMIT ? OFFSET ?";
         return jdbcTemplate.query(sql, placeRowMapper, size, --page);
     }
 
     @Override
-    public Optional<Place> getByAddress(String address) {
+    public Optional<Place> findByAddress(String address) {
         return Optional.of((Place) entityManager
                 .createQuery("select place from Place place where place.address=?1")
                 .setParameter(1, address)
@@ -39,7 +39,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
 
 
     @Override
-    public Optional<Place> getById(Integer id) {
+    public Optional<Place> findById(Integer id) {
         return Optional.of((Place) entityManager
                 .createQuery("select place from Place place where place.id=?1")
                 .setParameter(1, id)

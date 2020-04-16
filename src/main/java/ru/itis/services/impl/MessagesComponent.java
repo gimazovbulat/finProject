@@ -35,19 +35,16 @@ public class MessagesComponent {
             // добавляем эту страницу в Map-у страниц
             messages.put(pageId, new ArrayList<>());
         }
-        if (openRooms.get(roomId).contains(pageId)) {
-            synchronized (messages.get(pageId)) {
-                // если нет сообщений уходим в ожидание
-                if (messages.get(pageId).isEmpty()) {
-                    messages.get(pageId).wait();
-                }
+        synchronized (messages.get(pageId)) {
+            // если нет сообщений уходим в ожидание
+            if (messages.get(pageId).isEmpty()) {
+                messages.get(pageId).wait();
             }
-            // если сообщения есть - то кладем их в новых список
-            List<ChatMessageDto> response = new ArrayList<>(messages.get(pageId));
-            // удаляем сообщения из мапы
-            messages.get(pageId).clear();
-            return response;
         }
-        throw new IllegalStateException();
+        // если сообщения есть - то кладем их в новых список
+        List<ChatMessageDto> response = new ArrayList<>(messages.get(pageId));
+        // удаляем сообщения из мапы
+        messages.get(pageId).clear();
+        return response;
     }
 }

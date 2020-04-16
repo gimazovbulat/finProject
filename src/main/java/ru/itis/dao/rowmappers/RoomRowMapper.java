@@ -27,7 +27,7 @@ public class RoomRowMapper implements RowMapper<Room> {
         Integer number = rs.getInt("number");
         Integer price = rs.getInt("price");
 
-        Optional<Place> optionalPlace = placesRepository.getById(placeId);
+        Optional<Place> optionalPlace = placesRepository.findById(placeId);
         if (optionalPlace.isPresent()) {
             return Room.builder()
                     .id(id)

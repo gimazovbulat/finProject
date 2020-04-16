@@ -23,7 +23,7 @@ public class PlacesServiceImpl implements PlacesService {
 
     @Override
     public List<PlaceDto> getAll(int page, int size) {
-        List<? extends Place> places = placesRepository.getAll(page, size);
+        List<? extends Place> places = placesRepository.findAll(page, size);
         return places
                 .stream()
                 .map(place -> PlaceDto.builder()
@@ -36,7 +36,7 @@ public class PlacesServiceImpl implements PlacesService {
 
     @Override
     public PlaceDto getById(int id) {
-        Optional<Place> optionalPlace = placesRepository.getById(id);
+        Optional<Place> optionalPlace = placesRepository.findById(id);
         if (optionalPlace.isPresent()) {
             return optionalPlace.map(Place::toPlaceDto).get();
         } else {

@@ -29,7 +29,7 @@ public class ChatMessageServiceImpl implements ChatMessagesService {
 
     @Override
     public List<ChatMessageDto> getTechSupportMessages(Long roomId) {
-        Optional<ChatRoom> chatRoomOptional = chatRoomRepository.getRoom(roomId);
+        Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(roomId);
         if (chatRoomOptional.isPresent()) {
             ChatRoom chatRoom = chatRoomOptional.get();
             return chatMessagesRepository

@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface ChatRoomRepository {
     List<ChatRoom> getAllTechSupportRoomsForUser(User user);
     List<ChatRoom> getAllTechSupportRoomsForAdmin();
-    Optional<ChatRoom> getRoom(Long id);
-    void saveRoom(ChatRoom chatRoom);
+    Optional<ChatRoom> findById(Long id);
+    void save(ChatRoom chatRoom);
 }
