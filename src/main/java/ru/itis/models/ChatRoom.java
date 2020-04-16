@@ -22,15 +22,10 @@ public class ChatRoom {
     private Long id;
     private Boolean active;
     private String name;
-    //    @Fetch(FetchMode.SELECT)
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    @Transient
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(schema = "finproj", name = "chatters", joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "chatter_id"))
     private List<User> chatters;
-    //    @Fetch(FetchMode.SELECT)
-//    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "chatRoom")
     @OrderBy("time")
     @Transient
