@@ -14,21 +14,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.GenericFilterBean;
-import ru.itis.dao.interfaces.UsersRepository;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    final UsersRepository usersRepository;
 
     private final AuthenticationProvider jwtAuthenticationProvider;
     @Qualifier(value = "jwtAuthenticationFilter")
     private final GenericFilterBean jwtAuthenticationFilter;
 
-    public SecurityConfig(UsersRepository usersRepository,
-                          @Qualifier("jwtAuthenticationProvider") AuthenticationProvider jwtAuthenticationProvider,
+    public SecurityConfig(@Qualifier("jwtAuthenticationProvider") AuthenticationProvider jwtAuthenticationProvider,
                           GenericFilterBean jwtAuthenticationFilter) {
-        this.usersRepository = usersRepository;
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
