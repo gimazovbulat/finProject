@@ -1,22 +1,34 @@
 package ru.itis.config;
 
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import lombok.SneakyThrows;
+import org.springframework.core.env.PropertySource;
+import org.springframework.core.io.support.ResourcePropertySource;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.servlet.DispatcherServlet;
 
-public class MyWebInitializer
-        extends AbstractAnnotationConfigDispatcherServletInitializer {
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 
+public class MyWebInitializer implements WebApplicationInitializer {
+    @SneakyThrows
     @Override
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{ApplicationContextImpl.class, SecurityConfig.class};
-    }
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        AnnotationConfigWebApplicationContext springWebContext = new AnnotationConfigWebApplicationContext();
+        PropertySource propertySource = new ResourcePropertySource("classpath:application.properties");
+        springWebContext.getEnvironment().setActiveProfiles((String) propertySource.getProperty("profile"));
+        springWebContext.register(ApplicationContextImpl.class);
+        servletContext.addListener(new ContextLoaderListener(springWebContext));
+        ServletRegistration.Dynamic dispatcherServlet = servletContext.addServlet("dispatcher",
+                new DispatcherServlet(springWebContext));
+        dispatcherServlet.setLoadOnStartup(1);
+        dispatcherServlet.addMapping("/");
+        DelegatingFilterProxy filter = new DelegatingFilterProxy("springSecurityFilterChain");
+        servletContext.addFilter("springSecuirtyFilterChain", filter).addMappingForUrlPatterns(null,
+                false, "/*");
 
-    @Override
-    protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{WebConfig.class};
-    }
-
-    @Override
-    protected String[] getServletMappings() {
-        return new String[]{"/"};
     }
 }

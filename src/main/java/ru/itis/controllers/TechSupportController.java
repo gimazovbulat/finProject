@@ -1,5 +1,6 @@
 package ru.itis.controllers;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import ru.itis.services.interfaces.ChatRoomsService;
 import java.util.UUID;
 
 @Controller
+@Profile("mvc")
 public class TechSupportController {
     private final ChatRoomsService chatRoomsService;
 

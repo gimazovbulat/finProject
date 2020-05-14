@@ -8,7 +8,7 @@ import ru.itis.dto.ChatMessageDto;
 import ru.itis.dto.ChatMessageFormDto;
 import ru.itis.dto.ChatRoomDto;
 import ru.itis.dto.UserDto;
-import ru.itis.security.CurrentUser;
+import ru.itis.restSecurity.CurrentUser;
 import ru.itis.services.impl.MessagesComponent;
 import ru.itis.services.interfaces.ChatMessagesService;
 import ru.itis.services.interfaces.ChatRoomsService;

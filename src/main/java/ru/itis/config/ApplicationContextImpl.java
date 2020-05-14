@@ -2,7 +2,9 @@ package ru.itis.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -13,8 +15,11 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.persistence.EntityManagerFactory;
@@ -25,6 +30,7 @@ import java.util.Properties;
 @ComponentScan(basePackages = "ru.itis")
 @EnableAspectJAutoProxy
 @EnableScheduling
+@Profile({"mvc", "rest"})
 @PropertySource("classpath:/application.properties")
 @EnableTransactionManagement
 public class ApplicationContextImpl {
@@ -50,10 +56,11 @@ public class ApplicationContextImpl {
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(datasource());
+        return new JdbcTemplate(hikariDataSource());
     }
 
-    @Bean
+    @Bean("driverManagerDataSource")
+    @Primary
     public DataSource datasource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName(environment.getRequiredProperty(DB_DRIVER));
@@ -67,7 +74,7 @@ public class ApplicationContextImpl {
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new
                 LocalContainerEntityManagerFactoryBean();
-        localContainerEntityManagerFactoryBean.setDataSource(datasource());
+        localContainerEntityManagerFactoryBean.setDataSource(hikariDataSource());
         localContainerEntityManagerFactoryBean.setPackagesToScan(environment.getProperty(PROP_HIBERNATE_ENTITYMANAGER_PACKAGES_TO_SCAN));
 
         JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
@@ -93,8 +100,8 @@ public class ApplicationContextImpl {
         return config;
     }
 
-    @Bean
-    public DataSource hikariDataSource() {
+    @Bean("hikariDataSource")
+    public HikariDataSource hikariDataSource() {
         return new HikariDataSource(hikariConfig());
     }
 

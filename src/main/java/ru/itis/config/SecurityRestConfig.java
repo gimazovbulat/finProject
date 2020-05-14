@@ -3,6 +3,7 @@ package ru.itis.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,18 +14,20 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 import org.springframework.web.filter.GenericFilterBean;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Profile("rest")
+public class SecurityRestConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationProvider jwtAuthenticationProvider;
     @Qualifier(value = "jwtAuthenticationFilter")
     private final GenericFilterBean jwtAuthenticationFilter;
 
-    public SecurityConfig(@Qualifier("jwtAuthenticationProvider") AuthenticationProvider jwtAuthenticationProvider,
-                          GenericFilterBean jwtAuthenticationFilter) {
+    public SecurityRestConfig(@Qualifier("jwtAuthenticationProvider") AuthenticationProvider jwtAuthenticationProvider,
+                              GenericFilterBean jwtAuthenticationFilter) {
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }

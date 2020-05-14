@@ -1,4 +1,4 @@
-package ru.itis.security;
+package ru.itis.restSecurity;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

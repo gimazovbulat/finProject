@@ -10,6 +10,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import ru.itis.dto.UserDto;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Builder
 @Entity
 @Table(schema = "finproj", name = "users_table")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

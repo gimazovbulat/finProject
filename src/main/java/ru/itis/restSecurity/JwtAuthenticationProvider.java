@@ -1,8 +1,9 @@
-package ru.itis.security;
+package ru.itis.restSecurity;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Component("jwtAuthenticationProvider")
+@Profile("rest")
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Value("${jwt.token.secret}")

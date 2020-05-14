@@ -1,8 +1,8 @@
 package ru.itis.services.interfaces;
 
 import ru.itis.dto.SignUpForm;
-import ru.itis.dto.UserDto;
+import ru.itis.dto.StatusCode;
 
 public interface SignUpService {
-    UserDto signUp(SignUpForm signUpForm);
+    StatusCode signUp(SignUpForm signUpForm);
 }

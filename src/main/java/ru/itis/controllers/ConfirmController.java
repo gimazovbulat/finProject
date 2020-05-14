@@ -1,5 +1,6 @@
 package ru.itis.controllers;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,6 +9,7 @@ import ru.itis.models.UserState;
 import ru.itis.services.interfaces.ConfirmService;
 
 @Controller
+@Profile("mvc")
 public class ConfirmController {
     private final ConfirmService confirmService;
 

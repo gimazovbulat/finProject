@@ -1,5 +1,6 @@
 package ru.itis.controllers;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -11,8 +12,7 @@ import ru.itis.dto.BookingDto;
 import ru.itis.dto.BookingForm;
 import ru.itis.dto.PlaceDto;
 import ru.itis.dto.UserDto;
-import ru.itis.models.Booking;
-import ru.itis.security.CurrentUser;
+import ru.itis.restSecurity.CurrentUser;
 import ru.itis.services.interfaces.BookingService;
 import ru.itis.services.interfaces.PlacesService;
 import ru.itis.services.interfaces.UsersService;
@@ -20,6 +20,7 @@ import ru.itis.services.interfaces.UsersService;
 import java.util.List;
 
 @Controller
+@Profile("mvc")
 public class BookingController {
     private final UsersService usersService;
     private final BookingService bookingService;

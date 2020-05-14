@@ -3,11 +3,10 @@ package ru.itis.services.impl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.aspects.SendSignUpEmail;
 import ru.itis.dao.interfaces.RolesRepository;
 import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dto.SignUpForm;
-import ru.itis.dto.UserDto;
+import ru.itis.dto.StatusCode;
 import ru.itis.models.Role;
 import ru.itis.models.User;
 import ru.itis.models.UserState;
@@ -38,11 +37,14 @@ public class SignUpServiceImpl implements SignUpService {
 
     @Transactional
     @Override
-    public UserDto signUp(SignUpForm form) {
+    public StatusCode signUp(SignUpForm form) {
         Set<Role> roles = new HashSet<>();
         Optional<Role> role = rolesRepository.findById(1);
         role.ifPresent(roles::add);
         String confirmLink = UUID.randomUUID().toString();
+        if (!form.getPassword().equals(form.getConfirmPassword())) {
+            return new StatusCode(StatusCode.Status.VALIDATION_ERROR, "password and confirmation don't match");
+        }
         User user = User.builder()
                 .email(form.getEmail())
                 .password(passwordEncoder.encode(form.getPassword()))
@@ -57,6 +59,6 @@ public class SignUpServiceImpl implements SignUpService {
 
         mailService.sendEmailConfirmationLink(user);
 
-        return User.toUserDto(user);
+        return new StatusCode(StatusCode.Status.OK, "");
     }
 }

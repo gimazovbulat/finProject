@@ -1,8 +1,9 @@
-package ru.itis.security;
+package ru.itis.restSecurity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Profile("rest")
 public class JwtAuthentication implements Authentication {
     private UserDetails userDetails;
     private boolean isAuthenticated = false;

@@ -3,6 +3,7 @@ package ru.itis.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 @Configuration
 @EnableWebMvc
+@Profile("mvc")
 @ComponentScan(basePackages = {"ru.itis"})
 public class WebConfig implements WebMvcConfigurer {
 
@@ -19,6 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
     public ViewResolver viewResolver() {
         FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
         resolver.setCache(true);
+        resolver.setContentType("text/html; charset=UTF-8");
         resolver.setSuffix(".ftl");
         return resolver;
     }
@@ -34,6 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
     public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
         FreeMarkerConfigurationFactoryBean fmConfigFactoryBean = new FreeMarkerConfigurationFactoryBean();
         fmConfigFactoryBean.setTemplateLoaderPath("classpath:/templates/");
+        fmConfigFactoryBean.setDefaultEncoding("UTF-8");
         return fmConfigFactoryBean;
     }
 }

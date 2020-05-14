@@ -1,5 +1,6 @@
 package ru.itis.controllers;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +10,7 @@ import ru.itis.dto.BookingDto;
 import ru.itis.services.interfaces.BookingService;
 
 @RestController
+@Profile("mvc")
 public class PaymentController {
     private final BookingService bookingService;
 

@@ -1,6 +1,7 @@
 package ru.itis.controllers;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import ru.itis.services.interfaces.PlacesService;
 import java.util.List;
 
 @Controller
+@Profile("mvc")
 public class PlacesController {
     private final PlacesService placesService;
 

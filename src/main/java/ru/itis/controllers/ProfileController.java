@@ -1,15 +1,17 @@
 package ru.itis.controllers;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.itis.dto.UserDto;
-import ru.itis.security.CurrentUser;
+import ru.itis.restSecurity.CurrentUser;
 import ru.itis.services.interfaces.UsersService;
 
 @Controller
+@Profile("mvc")
 public class ProfileController {
     private final UsersService usersService;
 

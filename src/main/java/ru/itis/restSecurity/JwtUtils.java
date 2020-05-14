@@ -1,7 +1,8 @@
-package ru.itis.security;
+package ru.itis.restSecurity;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 import ru.itis.models.Role;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
+@Profile("rest")
 public class JwtUtils {
 
     @Value("${jwt.token.expired}")

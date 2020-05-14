@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.itis.dto.ChatRoomDto;
 import ru.itis.dto.UserDto;
 import ru.itis.models.ChatRoomType;
-import ru.itis.security.CurrentUser;
+import ru.itis.restSecurity.CurrentUser;
 import ru.itis.services.interfaces.ChatRoomsService;
 import ru.itis.services.interfaces.UsersService;
 

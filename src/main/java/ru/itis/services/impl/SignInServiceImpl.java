@@ -1,5 +1,6 @@
 package ru.itis.services.impl;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -7,11 +8,12 @@ import ru.itis.dao.interfaces.UsersRepository;
 import ru.itis.dto.SignInForm;
 import ru.itis.dto.TokenDto;
 import ru.itis.models.User;
-import ru.itis.security.JwtUtils;
+import ru.itis.restSecurity.JwtUtils;
 import ru.itis.services.interfaces.SignInService;
 
 import java.util.Optional;
 
+@Profile("rest")
 @Service
 public class SignInServiceImpl implements SignInService {
     private final UsersRepository usersRepository;
