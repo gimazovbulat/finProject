@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.persistence.EntityManagerFactory;
@@ -99,6 +100,7 @@ public class ApplicationContextImpl {
         config.setDriverClassName(environment.getProperty(DB_DRIVER));
         return config;
     }
+
 
     @Bean("hikariDataSource")
     public HikariDataSource hikariDataSource() {

@@ -3,13 +3,12 @@ package ru.itis.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.*;
 import ru.itis.dto.UserDto;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,6 +44,9 @@ public class User implements Serializable {
     @ManyToMany(mappedBy = "chatters")
     @Transient
     private List<ChatRoom> chatRooms;
+    @OneToMany(mappedBy = "user")
+    @Where(clause = "type = 'image/png'")
+    private List<FileInfo> fileInfo;
 
     public User() {
         roles = new HashSet<>();

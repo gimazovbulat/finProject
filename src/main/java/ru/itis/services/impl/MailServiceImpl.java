@@ -69,7 +69,6 @@ public class MailServiceImpl implements MailService {
             sender.send(message);
         });
     }
-
     private void execSendTemplate(String email, String subject, String text) {
         executorService.submit(() -> {
             MimeMessage message = sender.createMimeMessage();

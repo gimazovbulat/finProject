@@ -34,13 +34,14 @@ public class FilesRepositoryImpl implements FilesRepository {
     public Long save(FileInfo fileInfo) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        String sqlToSave = "INSERT INTO finproj.files (original_name, storage_name, type, url) VALUES (?, ?, ?, ?)";
+        String sqlToSave = "INSERT INTO finproj.files (original_name, storage_name, type, url, user_id) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlToSave, new String[]{"id"});
             ps.setString(1, fileInfo.getOriginalFileName());
             ps.setString(2, fileInfo.getStorageFileName());
             ps.setString(3, fileInfo.getType());
             ps.setString(4, fileInfo.getUrl());
+            ps.setLong(5, fileInfo.getUser().getId());
 
             return ps;
         }, keyHolder);

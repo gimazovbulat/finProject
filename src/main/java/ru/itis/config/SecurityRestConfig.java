@@ -8,13 +8,13 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 import org.springframework.web.filter.GenericFilterBean;
 
 @EnableWebSecurity
@@ -31,6 +31,7 @@ public class SecurityRestConfig extends WebSecurityConfigurerAdapter {
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {

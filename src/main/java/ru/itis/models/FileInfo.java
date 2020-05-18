@@ -24,6 +24,9 @@ public class FileInfo {
     private String storageFileName;
     private String type;
     private String url;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     public static FileInfo fromFileInfoDto(FileInfoDto fileInfoDto) {
         return FileInfo.builder()

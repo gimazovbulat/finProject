@@ -97,7 +97,7 @@ public class UsersRepositoryImpl implements UsersRepository {
         User user;
         String sql = "SELECT ut.id, ut.email, ut.password, ut.points, " +
                 " ut.state, ut.ava_path, role.id as roleId, role.name as roleName, ut.confirm_link FROM finproj.users_table ut JOIN finproj.user_roles ur " +
-                "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE id = ?";
+                "ON ut.id = ur.user_id JOIN finproj.roles role ON ur.role_id = role.id WHERE ut.id = ?";
         try {
             user = jdbcTemplate.queryForObject(sql, usersRowmapper, id);
             List<Booking> bookings = bookingRepository.getUsersBookings(user);

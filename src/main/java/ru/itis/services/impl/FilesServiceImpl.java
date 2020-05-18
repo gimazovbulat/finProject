@@ -4,9 +4,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.itis.aspects.SendMailAnno;
 import ru.itis.dao.interfaces.FilesRepository;
+import ru.itis.dto.UserDto;
 import ru.itis.models.FileInfo;
+import ru.itis.models.User;
 import ru.itis.services.interfaces.FilesService;
+import ru.itis.services.interfaces.UsersService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -23,19 +27,23 @@ import static org.apache.commons.io.IOUtils.copy;
 @Service
 public class FilesServiceImpl implements FilesService {
     private final FilesRepository filesRepository;
+    private final UsersService usersService;
 
-    public FilesServiceImpl(FilesRepository filesRepository) {
+    public FilesServiceImpl(FilesRepository filesRepository, UsersService usersService) {
         this.filesRepository = filesRepository;
+        this.usersService = usersService;
     }
 
     @Value("${storage.dir}")
     private String storageDir;
 
+    @SendMailAnno
     @Override
     public FileInfo save(MultipartFile file, Long userId) {
         String fileOrigName = file.getOriginalFilename();
         String storageName = UUID.randomUUID() + "." + FilenameUtils.getExtension(fileOrigName);
         Path path = Paths.get(storageDir + storageName);
+        UserDto userDto = usersService.findUser(userId);
 
         try {
             Files.copy(file.getInputStream(), path);
@@ -48,6 +56,7 @@ public class FilesServiceImpl implements FilesService {
                 .storageFileName(storageName)
                 .type(file.getContentType())
                 .url("/files/" + storageName)
+                .user(User.fromUserDto(userDto))
                 .build();
 
         filesRepository.save(fileInfo);

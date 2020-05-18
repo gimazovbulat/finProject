@@ -1,5 +1,6 @@
 package ru.itis.dao.impl;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.itis.dao.interfaces.BookingRepository;
 import ru.itis.dao.interfaces.RoomsRepository;
